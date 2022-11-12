@@ -6,6 +6,8 @@ defmodule WeLiftWeb.DashboardLive do
   def render(assigns) do
     ~H"""
       <.header>Dashboard</.header>
+
+      <.button>Start New Workout</.button>
     """
   end
 end
