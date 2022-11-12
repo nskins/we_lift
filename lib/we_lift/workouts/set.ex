@@ -14,7 +14,7 @@ defmodule WeLift.Workouts.Set do
   @doc false
   def changeset(set, attrs) do
     set
-    |> cast(attrs, [:weight_in_lbs, :reps])
-    |> validate_required([:weight_in_lbs, :reps])
+    |> cast(attrs, [:weight_in_lbs, :reps, :workout_id, :exercise_id])
+    |> validate_required([:weight_in_lbs, :reps, :workout_id, :exercise_id])
   end
 end
