@@ -12,7 +12,7 @@ defmodule WeLift.Workouts.Workout do
   @doc false
   def changeset(workout, attrs) do
     workout
-    |> cast(attrs, [])
-    |> validate_required([])
+    |> cast(attrs, [:user_id])
+    |> validate_required([:user_id])
   end
 end
