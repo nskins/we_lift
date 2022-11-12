@@ -7,7 +7,17 @@ defmodule WeLiftWeb.DashboardLive do
     ~H"""
       <.header>Dashboard</.header>
 
-      <.button>Start New Workout</.button>
+      <.button phx-click='start_workout'>Start New Workout</.button>
     """
+  end
+
+  
+  def handle_event("start_workout", params, socket) do
+    {:ok, workout} = Workouts.create_workout(socket.assigns.current_user)
+    
+    {:noreply, 
+    socket
+    |> assign(workout: workout)
+    |> redirect(to: ~p"/workouts/#{workout.id}/edit")}
   end
 end

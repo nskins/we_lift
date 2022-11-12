@@ -69,6 +69,7 @@ defmodule WeLiftWeb.Router do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
       live "/dashboard", DashboardLive, :home
+      live "/workouts/:id/edit", WorkoutLive.Index, :edit
     end
   end
 
