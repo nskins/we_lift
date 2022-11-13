@@ -39,11 +39,24 @@ defmodule WeLiftWeb.WorkoutLive.Index do
     exercises =
       Workouts.list_exercises()
       |> Enum.map(fn e -> {e.name, e.id} end)
+    
+    set = %Set{}
 
     {:ok, 
       socket
-      |> assign(:changeset, Workouts.change_set(%Set{}))
+      |> assign(:set, set)
+      |> assign(:changeset, Workouts.change_set(set))
       |> assign(:exercises, exercises)}
+  end
+
+  @impl true
+  def handle_event("validate", %{"set" => set_params}, socket) do
+    changeset =
+      socket.assigns.set
+      |> Workouts.change_set(set_params)
+      |> Map.put(:action, :validate)
+
+    {:noreply, assign(socket, :changeset, changeset)}
   end
 
 end
