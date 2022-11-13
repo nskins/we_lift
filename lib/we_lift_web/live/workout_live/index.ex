@@ -73,7 +73,10 @@ defmodule WeLiftWeb.WorkoutLive.Index do
         "user_id" => socket.assigns.current_user.id }) do
 
       {:ok, _workout} ->
-        {:noreply, socket |> put_flash(:info, "Workout updated successfully.")}
+        {:noreply, 
+          socket 
+          |> put_flash(:info, "Workout finished!")
+          |> redirect(to: ~p"/dashboard")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, socket |> put_flash(:error, "Unable to update Workout!")}
