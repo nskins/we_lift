@@ -12,8 +12,11 @@ defmodule WeLiftWeb.DashboardLive do
       <.table id="workouts" rows={@workouts}}>
         <:col :let={workout} label="id"><%= workout.id %></:col>
         <:col :let={workout} label="finished"><%= finished_status(workout) %></:col>
-        <:col :let={workout} label="action">
+        <:col :let={workout} label="show">
           <.button phx-click={show_workout(workout)}>Show</.button>
+        </:col>
+        <:col :let={workout} label="edit">
+          <.button phx-click={edit_workout(workout)}>Edit</.button>
         </:col>
       </.table>
 
@@ -34,6 +37,10 @@ defmodule WeLiftWeb.DashboardLive do
     |> redirect(to: ~p"/workouts/#{workout.id}/edit")}
   end
   
+  defp edit_workout(workout) do
+    JS.navigate(~p"/workouts/#{workout.id}/edit")
+  end
+
   defp show_workout(workout) do
     JS.navigate(~p"/workouts/#{workout.id}")
   end
