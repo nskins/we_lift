@@ -23,7 +23,7 @@ defmodule WeLiftWeb.WorkoutLive.Index do
         Oops, something went wrong! Please check the errors below.
       </.error>
       
-      <.input field={{f, :workout_id}} type="hidden" value={@workout_id} />
+      <.input field={{f, :workout_id}} type="hidden" value={@workout.id} />
       <.input field={{f, :exercise_id}} type="select" options={@exercises} required />
       <.input field={{f, :weight_in_lbs}} label="Weight (lbs.)" required />
       <.input field={{f, :reps}} label="Reps" required />
@@ -37,7 +37,9 @@ defmodule WeLiftWeb.WorkoutLive.Index do
   end
 
   def mount(params, _session, socket) do
-    workout_id = params["id"]
+    workout = Workouts.get_workout!(
+      socket.assigns.current_user, 
+      params["id"])
 
     exercises =
       Workouts.list_exercises()
@@ -48,7 +50,7 @@ defmodule WeLiftWeb.WorkoutLive.Index do
     {:ok, 
       socket
       |> assign(:set, set)
-      |> assign(:workout_id, workout_id)
+      |> assign(:workout, workout)
       |> assign(:changeset, Workouts.change_set(set))
       |> assign(:exercises, exercises)}
   end
@@ -61,6 +63,22 @@ defmodule WeLiftWeb.WorkoutLive.Index do
       |> Map.put(:action, :validate)
 
     {:noreply, assign(socket, :changeset, changeset)}
+  end
+
+  def handle_event("finish_workout", _params, socket) do
+    case Workouts.update_workout(
+      socket.assigns.current_user,
+      socket.assigns.workout,
+      %{"finished_at" => NaiveDateTime.utc_now(),
+        "user_id" => socket.assigns.current_user.id }) do
+
+      {:ok, _workout} ->
+        {:noreply, socket |> put_flash(:info, "Workout updated successfully.")}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, socket |> put_flash(:error, "Unable to update Workout!")}
+      
+    end
   end
 
   def handle_event("submit_set", %{"set" => set_params}, socket) do

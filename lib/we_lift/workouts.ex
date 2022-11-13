@@ -122,6 +122,40 @@ defmodule WeLift.Workouts do
   end
 
   @doc """
+  Updates a workout.
+
+  Raises `MatchError` if the User is not authorized to update the workout.
+
+  ## Examples
+
+      iex> update_workout(%{id: 5}, workout, %{field: new_value})
+      {:ok, %Workout{}}
+
+      iex> update_workout(%{id: 5}, workout, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+      iex> update_workout(%{id: 5}, %{user_id: 6}, %{field: new_value})
+      ** (MatchError)
+
+  """
+  def update_workout(user, %Workout{} = workout, attrs) do
+    user_id = user.id
+
+    # This ensures the original workout belongs to the user.
+    %Workout{user_id: ^user_id} = workout
+
+    IO.inspect(attrs)
+
+    # This ensures the user is not trying to update
+    # the workout to belong to another user.
+    %{"user_id" => ^user_id} = attrs
+
+    workout
+    |> Workout.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
   Returns an `%Ecto.Changeset{}` for tracking set changes.
   
   ## Examples
@@ -131,6 +165,18 @@ defmodule WeLift.Workouts do
   """
   def change_set(%Set{} = set, attrs \\ %{}) do
     Set.changeset(set, attrs)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking workout changes.
+
+  ## Examples
+    iex> change_workout(workout)
+    %Ecto.Changeset{data: %Workout{}}
+
+  """
+  def change_workout(%Workout{} = workout, attrs \\ %{}) do
+    Workout.changeset(workout, attrs)
   end
 
 end
