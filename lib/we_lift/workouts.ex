@@ -6,6 +6,7 @@ defmodule WeLift.Workouts do
   import Ecto.Query, warn: false
   alias WeLift.Repo
   
+  alias WeLift.Workouts.Exercise
   alias WeLift.Workouts.Set
   alias WeLift.Workouts.Workout
 
@@ -29,6 +30,19 @@ defmodule WeLift.Workouts do
     |> Repo.insert()
   end
   
+  @doc """
+  Returns the list of exercises.
+
+  ## Examples
+
+      iex> list_exercises()
+      [%Exercise{}, ...]
+
+  """
+  def list_exercises() do
+    Repo.all(Exercise)
+  end
+
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking set changes.
   

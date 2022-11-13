@@ -22,7 +22,8 @@ defmodule WeLiftWeb.WorkoutLive.Index do
       <.error :if={@changeset.action == :insert}>
         Oops, something went wrong! Please check the errors below.
       </.error>
-
+      
+      <.input field={{f, :exercise_id}} type="select" options={@exercises} required />
       <.input field={{f, :weight_in_lbs}} label="Weight (lbs.)" required />
       <.input field={{f, :reps}} label="Reps" required />
 
@@ -35,9 +36,14 @@ defmodule WeLiftWeb.WorkoutLive.Index do
   end
 
   def mount(params, _session, socket) do
+    exercises =
+      Workouts.list_exercises()
+      |> Enum.map(fn e -> {e.name, e.id} end)
+
     {:ok, 
       socket
-      |> assign(:changeset, Workouts.change_set(%Set{}))}
+      |> assign(:changeset, Workouts.change_set(%Set{}))
+      |> assign(:exercises, exercises)}
   end
 
 end
