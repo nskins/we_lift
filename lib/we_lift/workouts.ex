@@ -72,6 +72,25 @@ defmodule WeLift.Workouts do
   end
 
   @doc """
+  Returns a list of workouts for the user.
+
+  ## Examples
+
+      iex> list_workouts(%{id: 5})
+      [%Workout{}, ...]
+
+  """
+  def list_workouts(user) do
+    user_id = user.id
+    
+    query =
+      from w in Workout,
+        where: w.user_id == ^user_id
+
+    Repo.all(query)
+  end
+
+  @doc """
   Gets a single workout.
 
   Raises `Ecto.NoResultsError` if the Workout does not exist.
