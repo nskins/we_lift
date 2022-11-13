@@ -17,7 +17,6 @@ defmodule WeLiftWeb.DashboardLive do
     
     {:noreply, 
     socket
-    |> assign(workout: workout)
     |> redirect(to: ~p"/workouts/#{workout.id}/edit")}
   end
 end
