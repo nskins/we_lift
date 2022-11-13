@@ -3,7 +3,6 @@ defmodule WeLift.Workouts.Workout do
   import Ecto.Changeset
 
   schema "workouts" do
-
     field :user_id, :id
     field :finished_at, :naive_datetime
 

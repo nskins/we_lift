@@ -6,12 +6,12 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
 
   def render(assigns) do
     ~H"""
-    <.button phx-click='finish_workout'>Finish Workout</.button>
-    
+    <.button phx-click="finish_workout">Finish Workout</.button>
+
     <div>or</div>
 
     <.header>Do Another Set</.header>
-    
+
     <.simple_form
       :let={f}
       for={@changeset}
@@ -22,7 +22,7 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
       <.error :if={@changeset.action == :insert}>
         Oops, something went wrong! Please check the errors below.
       </.error>
-      
+
       <.input field={{f, :workout_id}} type="hidden" value={@workout.id} />
       <.input field={{f, :exercise_id}} type="select" options={@exercises} required />
       <.input field={{f, :weight_in_lbs}} label="Weight (lbs.)" required />
@@ -32,27 +32,28 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
         <.button phx-disable-with="Adding...">Finish Set</.button>
       </:actions>
     </.simple_form>
-
     """
   end
 
   def mount(params, _session, socket) do
-    workout = Workouts.get_workout!(
-      socket.assigns.current_user, 
-      params["id"])
+    workout =
+      Workouts.get_workout!(
+        socket.assigns.current_user,
+        params["id"]
+      )
 
     exercises =
       Workouts.list_exercises()
       |> Enum.map(fn e -> {e.name, e.id} end)
-    
+
     set = %Set{}
 
-    {:ok, 
-      socket
-      |> assign(:set, set)
-      |> assign(:workout, workout)
-      |> assign(:changeset, Workouts.change_set(set))
-      |> assign(:exercises, exercises)}
+    {:ok,
+     socket
+     |> assign(:set, set)
+     |> assign(:workout, workout)
+     |> assign(:changeset, Workouts.change_set(set))
+     |> assign(:exercises, exercises)}
   end
 
   @impl true
@@ -67,33 +68,34 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
 
   def handle_event("finish_workout", _params, socket) do
     case Workouts.update_workout(
-      socket.assigns.current_user,
-      socket.assigns.workout,
-      %{"finished_at" => NaiveDateTime.utc_now(),
-        "user_id" => socket.assigns.current_user.id }) do
-
+           socket.assigns.current_user,
+           socket.assigns.workout,
+           %{
+             "finished_at" => NaiveDateTime.utc_now(),
+             "user_id" => socket.assigns.current_user.id
+           }
+         ) do
       {:ok, _workout} ->
-        {:noreply, 
-          socket 
-          |> put_flash(:info, "Workout finished!")
-          |> redirect(to: ~p"/dashboard")}
+        {:noreply,
+         socket
+         |> put_flash(:info, "Workout finished!")
+         |> redirect(to: ~p"/dashboard")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, socket |> put_flash(:error, "Unable to update Workout!")}
-      
     end
   end
 
   def handle_event("submit_set", %{"set" => set_params}, socket) do
     case Workouts.create_set(
-      socket.assigns.current_user,
-      set_params) do
-        {:ok, _set} ->
-          {:noreply, socket |> put_flash(:info, "Set created successfully.")}
+           socket.assigns.current_user,
+           set_params
+         ) do
+      {:ok, _set} ->
+        {:noreply, socket |> put_flash(:info, "Set created successfully.")}
 
-        {:error, %Ecto.Changeset{} = changeset} ->
-          {:noreply, assign(socket, :changeset, changeset)}
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, :changeset, changeset)}
     end
   end
-
 end

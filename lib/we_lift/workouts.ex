@@ -5,7 +5,7 @@ defmodule WeLift.Workouts do
 
   import Ecto.Query, warn: false
   alias WeLift.Repo
-  
+
   alias WeLift.Workouts.Exercise
   alias WeLift.Workouts.Set
   alias WeLift.Workouts.Workout
@@ -36,8 +36,8 @@ defmodule WeLift.Workouts do
     %Workout{user_id: ^user_id} = get_workout!(user, attrs["workout_id"])
 
     %Set{}
-      |> Set.changeset(attrs)
-      |> Repo.insert()
+    |> Set.changeset(attrs)
+    |> Repo.insert()
   end
 
   @doc """
@@ -57,7 +57,7 @@ defmodule WeLift.Workouts do
     |> Workout.changeset(%{user_id: user.id})
     |> Repo.insert()
   end
-  
+
   @doc """
   Returns the list of exercises.
 
@@ -82,7 +82,7 @@ defmodule WeLift.Workouts do
   """
   def list_workouts(user) do
     user_id = user.id
-    
+
     query =
       from w in Workout,
         where: w.user_id == ^user_id
@@ -110,7 +110,7 @@ defmodule WeLift.Workouts do
 
   """
   def get_workout!(user, id) do
-    workout = 
+    workout =
       Repo.get!(Workout, id)
       |> Repo.preload(sets: [:exercise])
 
@@ -173,18 +173,18 @@ defmodule WeLift.Workouts do
     %Exercise{}
     |> Exercise.changeset(attrs)
     |> Repo.insert(
-        on_conflict: :nothing,
-        conflict_target: :name
-       )
+      on_conflict: :nothing,
+      conflict_target: :name
+    )
   end
 
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking set changes.
-  
+
   ## Examples
       iex> change_set(set)
       %Ecto.Changeset{data: %Set{}}
-  
+
   """
   def change_set(%Set{} = set, attrs \\ %{}) do
     Set.changeset(set, attrs)
@@ -201,5 +201,4 @@ defmodule WeLift.Workouts do
   def change_workout(%Workout{} = workout, attrs \\ %{}) do
     Workout.changeset(workout, attrs)
   end
-
 end
