@@ -9,3 +9,15 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+alias WeLift.Workouts
+
+default_exercises = [
+  "Bench Press",
+  "Dumbbell Curls",
+  "Planks"
+]
+
+for exercise <- default_exercises do
+  Workouts.upsert_exercise(%{name: exercise})
+end

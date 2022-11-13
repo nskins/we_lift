@@ -156,6 +156,27 @@ defmodule WeLift.Workouts do
   end
 
   @doc """
+  Upserts an exercise.
+
+  ## Examples
+
+      iex> upsert_exercise(%{name: "Bench Press"})
+      {:ok, %Exercise{}}
+
+      iex> upsert_exercise(%{})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def upsert_exercise(attrs) do
+    %Exercise{}
+    |> Exercise.changeset(attrs)
+    |> Repo.insert(
+        on_conflict: :nothing,
+        conflict_target: :name
+       )
+  end
+
+  @doc """
   Returns an `%Ecto.Changeset{}` for tracking set changes.
   
   ## Examples
