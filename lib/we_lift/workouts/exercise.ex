@@ -4,6 +4,8 @@ defmodule WeLift.Workouts.Exercise do
 
   schema "exercises" do
     field :name, :string
+    
+    has_many :sets, WeLift.Workouts.Set
 
     timestamps()
   end

@@ -112,7 +112,7 @@ defmodule WeLift.Workouts do
   def get_workout!(user, id) do
     workout = 
       Repo.get!(Workout, id)
-      |> Repo.preload([:sets])
+      |> Repo.preload(sets: [:exercise])
 
     user_id = workout.user_id
 
