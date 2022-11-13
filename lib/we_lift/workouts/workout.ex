@@ -5,6 +5,7 @@ defmodule WeLift.Workouts.Workout do
   schema "workouts" do
 
     field :user_id, :id
+    field :finished_at, :naive_datetime
 
     timestamps()
   end

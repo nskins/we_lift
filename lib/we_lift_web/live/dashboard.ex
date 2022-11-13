@@ -11,6 +11,7 @@ defmodule WeLiftWeb.DashboardLive do
 
       <.table id="workouts" rows={@workouts}>
         <:col :let={workout} label="id"><%= workout.id %></:col>
+        <:col :let={workout} label="finished"><%= finished_status(workout) %></:col>
       </.table>
 
     """
@@ -28,5 +29,12 @@ defmodule WeLiftWeb.DashboardLive do
     {:noreply, 
     socket
     |> redirect(to: ~p"/workouts/#{workout.id}/edit")}
+  end
+
+  defp finished_status(workout) do
+    case workout.finished_at do
+      nil -> "Unfinished"
+      _ -> "Finished"
+    end
   end
 end
