@@ -5,8 +5,9 @@ defmodule WeLift.Workouts.Set do
   schema "sets" do
     field :reps, :integer
     field :weight_in_lbs, :integer
-    field :workout_id, :id
-    field :exercise_id, :id
+    
+    belongs_to :exercise, WeLift.Workouts.Exercise
+    belongs_to :workout, WeLift.Workouts.Workout
 
     timestamps()
   end

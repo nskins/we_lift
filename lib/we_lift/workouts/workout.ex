@@ -7,6 +7,8 @@ defmodule WeLift.Workouts.Workout do
     field :user_id, :id
     field :finished_at, :naive_datetime
 
+    has_many :sets, WeLift.Workouts.Set
+
     timestamps()
   end
 

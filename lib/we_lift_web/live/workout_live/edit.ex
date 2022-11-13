@@ -1,4 +1,4 @@
-defmodule WeLiftWeb.WorkoutLive.Index do
+defmodule WeLiftWeb.WorkoutLive.Edit do
   use WeLiftWeb, :live_view
 
   alias WeLift.Workouts
