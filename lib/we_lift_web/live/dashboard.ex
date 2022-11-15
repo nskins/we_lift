@@ -3,13 +3,14 @@ defmodule WeLiftWeb.DashboardLive do
 
   alias WeLift.Workouts
 
+  @impl true
   def render(assigns) do
     ~H"""
     <.header>Dashboard</.header>
 
     <.button phx-click="start_workout">Start New Workout</.button>
 
-    <.table id="workouts" rows={@workouts} }>
+    <.table id="workouts" rows={@workouts}>
       <:col :let={workout} label="id"><%= workout.id %></:col>
       <:col :let={workout} label="finished"><%= finished_status(workout) %></:col>
       <:col :let={workout} label="show">
@@ -22,13 +23,15 @@ defmodule WeLiftWeb.DashboardLive do
     """
   end
 
+  @impl true
   def mount(_params, _session, socket) do
     workouts = Workouts.list_workouts(socket.assigns.current_user)
 
     {:ok, socket |> assign(:workouts, workouts)}
   end
 
-  def handle_event("start_workout", params, socket) do
+  @impl true
+  def handle_event("start_workout", _params, socket) do
     {:ok, workout} = Workouts.create_workout(socket.assigns.current_user)
 
     {:noreply,

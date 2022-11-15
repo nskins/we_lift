@@ -4,6 +4,7 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
   alias WeLift.Workouts
   alias WeLift.Workouts.Set
 
+  @impl true
   def render(assigns) do
     ~H"""
     <.button phx-click="finish_workout">Finish Workout</.button>
@@ -35,6 +36,7 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
     """
   end
 
+  @impl true
   def mount(params, _session, socket) do
     workout =
       Workouts.get_workout!(
@@ -66,6 +68,7 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
     {:noreply, assign(socket, :changeset, changeset)}
   end
 
+  @impl true
   def handle_event("finish_workout", _params, socket) do
     case Workouts.update_workout(
            socket.assigns.current_user,
@@ -81,11 +84,12 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
          |> put_flash(:info, "Workout finished!")
          |> redirect(to: ~p"/dashboard")}
 
-      {:error, %Ecto.Changeset{} = changeset} ->
+      {:error, %Ecto.Changeset{} = _changeset} ->
         {:noreply, socket |> put_flash(:error, "Unable to update Workout!")}
     end
   end
 
+  @impl true
   def handle_event("submit_set", %{"set" => set_params}, socket) do
     case Workouts.create_set(
            socket.assigns.current_user,

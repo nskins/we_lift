@@ -3,7 +3,7 @@ defmodule WeLiftWeb.WorkoutLive.Show do
 
   alias WeLift.Workouts
 
-  @impl
+  @impl true
   def render(assigns) do
     ~H"""
     <.header>Workout</.header>
@@ -16,6 +16,7 @@ defmodule WeLiftWeb.WorkoutLive.Show do
     """
   end
 
+  @impl true
   def mount(params, _session, socket) do
     workout =
       Workouts.get_workout!(
