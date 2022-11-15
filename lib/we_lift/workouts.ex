@@ -114,7 +114,7 @@ defmodule WeLift.Workouts do
       Repo.get!(Workout, id)
       |> Repo.preload(sets: [:exercise])
 
-    user_id = workout.user_id
+    user_id = user.id
 
     # This verifies that the User has permission to
     # retrieve this Workout.
