@@ -1,5 +1,4 @@
 defmodule Setup do
-      
   alias WeLift.Workouts
 
   def run do
