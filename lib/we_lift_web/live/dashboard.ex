@@ -11,7 +11,7 @@ defmodule WeLiftWeb.DashboardLive do
     <.button phx-click="start_workout">Start New Workout</.button>
 
     <.table id="workouts" rows={@workouts}>
-      <:col :let={workout} label="id"><%= workout.id %></:col>
+      <:col :let={workout} label="date"><%= WeLift.Date.prettify(workout.inserted_at) %></:col>
       <:col :let={workout} label="finished"><%= finished_status(workout) %></:col>
       <:col :let={workout} label="show">
         <.button phx-click={show_workout(workout)}>Show</.button>
