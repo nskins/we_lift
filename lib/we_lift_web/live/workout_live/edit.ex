@@ -7,12 +7,6 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
   @impl true
   def render(assigns) do
     ~H"""
-    <.button phx-click="finish_workout">Finish Workout</.button>
-
-    <div>or</div>
-
-    <.header>Do Another Set</.header>
-
     <.simple_form
       :let={f}
       for={@changeset}
@@ -24,6 +18,12 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
         Oops, something went wrong! Please check the errors below.
       </.error>
 
+      <div class="flex flex-row overflow-x-scroll">
+        <%= for set <- Enum.reverse(@workout.sets) do %>
+          <.set_box set={set} />
+        <% end %>
+      </div>
+
       <.input field={{f, :workout_id}} type="hidden" value={@workout.id} />
       <.input field={{f, :exercise_id}} type="select" options={@exercises} required />
       <.input field={{f, :weight_in_lbs}} label="Weight (lbs.)" required />
@@ -33,6 +33,18 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
         <.button phx-disable-with="Adding...">Finish Set</.button>
       </:actions>
     </.simple_form>
+
+    <.button class="mt-7" phx-click="finish_workout">Finish Workout</.button>
+    """
+  end
+
+  def set_box(assigns) do
+    ~H"""
+    <div class="p-6">
+      <div class="font-bold w-32"><%= @set.exercise.name %></div>
+      <div class="w-32"><%= @set.weight_in_lbs %> lbs.</div>
+      <div class="w-32"><%= @set.reps %> reps</div>
+    </div>
     """
   end
 
@@ -96,7 +108,13 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
            set_params
          ) do
       {:ok, _set} ->
-        {:noreply, socket |> put_flash(:info, "Set created successfully.")}
+        workout =
+          Workouts.get_workout!(
+            socket.assigns.current_user,
+            socket.assigns.workout.id
+          )
+
+        {:noreply, assign(socket, :workout, workout)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :changeset, changeset)}
