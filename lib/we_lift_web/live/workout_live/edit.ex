@@ -7,12 +7,6 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
   @impl true
   def render(assigns) do
     ~H"""
-    <.button phx-click="finish_workout">Finish Workout</.button>
-
-    <div>or</div>
-
-    <.header>Do Another Set</.header>
-
     <.simple_form
       :let={f}
       for={@changeset}
@@ -32,7 +26,10 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
       <:actions>
         <.button phx-disable-with="Adding...">Finish Set</.button>
       </:actions>
+
     </.simple_form>
+
+    <.button class="mt-7" phx-click="finish_workout">Finish Workout</.button>
     """
   end
 
