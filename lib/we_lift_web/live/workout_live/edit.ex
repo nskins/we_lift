@@ -23,7 +23,7 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
           <.set_box set={set} />
         <% end %>
       </div>
-     
+
       <.input field={{f, :workout_id}} type="hidden" value={@workout.id} />
       <.input field={{f, :exercise_id}} type="select" options={@exercises} required />
       <.input field={{f, :weight_in_lbs}} label="Weight (lbs.)" required />
@@ -32,7 +32,6 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
       <:actions>
         <.button phx-disable-with="Adding...">Finish Set</.button>
       </:actions>
-
     </.simple_form>
 
     <.button class="mt-7" phx-click="finish_workout">Finish Workout</.button>
@@ -109,14 +108,13 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
            set_params
          ) do
       {:ok, _set} ->
-
         workout =
           Workouts.get_workout!(
             socket.assigns.current_user,
             socket.assigns.workout.id
           )
 
-      {:noreply, assign(socket, :workout, workout) }
+        {:noreply, assign(socket, :workout, workout)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :changeset, changeset)}
