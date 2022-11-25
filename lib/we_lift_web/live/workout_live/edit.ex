@@ -109,7 +109,14 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
            set_params
          ) do
       {:ok, _set} ->
-        {:noreply, socket |> put_flash(:info, "Set created successfully.")}
+
+        workout =
+          Workouts.get_workout!(
+            socket.assigns.current_user,
+            socket.assigns.workout.id
+          )
+
+      {:noreply, assign(socket, :workout, workout) }
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :changeset, changeset)}
