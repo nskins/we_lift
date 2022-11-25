@@ -18,6 +18,12 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
         Oops, something went wrong! Please check the errors below.
       </.error>
 
+      <div class="flex flex-row overflow-auto">
+        <%= for set <- @workout.sets do %>
+          <.set_box set={set} />
+        <% end %>
+      </div>
+     
       <.input field={{f, :workout_id}} type="hidden" value={@workout.id} />
       <.input field={{f, :exercise_id}} type="select" options={@exercises} required />
       <.input field={{f, :weight_in_lbs}} label="Weight (lbs.)" required />
@@ -30,6 +36,16 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
     </.simple_form>
 
     <.button class="mt-7" phx-click="finish_workout">Finish Workout</.button>
+    """
+  end
+
+  def set_box(assigns) do
+    ~H"""
+    <div class="p-6">
+      <div class="font-bold w-32"><%= @set.exercise.name %></div>
+      <div class="w-32"><%= @set.weight_in_lbs %> lbs.</div>
+      <div class="w-32"><%= @set.reps %> reps</div>
+    </div>
     """
   end
 
