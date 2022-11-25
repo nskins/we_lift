@@ -19,7 +19,7 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
       </.error>
 
       <div class="flex flex-row overflow-auto">
-        <%= for set <- @workout.sets do %>
+        <%= for set <- Enum.reverse(@workout.sets) do %>
           <.set_box set={set} />
         <% end %>
       </div>
