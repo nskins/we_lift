@@ -1,6 +1,7 @@
 defmodule WeLiftWeb.WorkoutLive.Edit do
   use WeLiftWeb, :live_view
 
+  alias WeLift.Sort
   alias WeLift.Workouts
   alias WeLift.Workouts.Set
 
@@ -19,7 +20,7 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
       </.error>
 
       <div class="flex flex-row overflow-x-scroll">
-        <%= for set <- Enum.reverse(@workout.sets) do %>
+        <%= for set <- Sort.reverse_chronologically(@workout.sets) do %>
           <.set_box set={set} />
         <% end %>
       </div>
