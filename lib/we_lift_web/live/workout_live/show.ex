@@ -29,5 +29,5 @@ defmodule WeLiftWeb.WorkoutLive.Show do
      |> assign(:workout, workout)}
   end
 
-  def chronological(a, b), do: a.inserted_at <= b.inserted_at
+  defp chronological(a, b), do: a.inserted_at <= b.inserted_at
 end
