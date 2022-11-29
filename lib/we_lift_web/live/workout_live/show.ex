@@ -8,7 +8,7 @@ defmodule WeLiftWeb.WorkoutLive.Show do
     ~H"""
     <.header>Workout</.header>
 
-    <.table id="sets" rows={@workout.sets}>
+    <.table id="sets" rows={Enum.sort(@workout.sets, &chronological/2)}>
       <:col :let={set} label="exercise"><%= set.exercise.name %></:col>
       <:col :let={set} label="weight_in_lbs"><%= set.weight_in_lbs %></:col>
       <:col :let={set} label="reps"><%= set.reps %></:col>
@@ -28,4 +28,6 @@ defmodule WeLiftWeb.WorkoutLive.Show do
      socket
      |> assign(:workout, workout)}
   end
+
+  def chronological(a, b), do: a.inserted_at <= b.inserted_at
 end
