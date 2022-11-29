@@ -19,7 +19,7 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
       </.error>
 
       <div class="flex flex-row overflow-x-scroll">
-        <%= for set <- Enum.reverse(@workout.sets) do %>
+        <%= for set <- Enum.sort(@workout.sets, &reverse_chronological/2) do %>
           <.set_box set={set} />
         <% end %>
       </div>
@@ -120,4 +120,6 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
         {:noreply, assign(socket, :changeset, changeset)}
     end
   end
+
+  defp reverse_chronological(a, b), do: a.inserted_at >= b.inserted_at
 end
