@@ -1,8 +1,21 @@
-defmodule Setup do
+defmodule WeLift.Repo.Migrations.AddDefaultExercises do
+  use Ecto.Migration
   alias WeLift.Workouts
 
-  def run do
-    default_exercises = [
+  def up do
+    for exercise <- default_exercises() do
+      Workouts.upsert_exercise(%{name: exercise})
+    end
+  end
+
+  def down do
+    for exercise <- default_exercises() do
+      Workouts.delete_exercise(exercise)
+    end
+  end
+
+  defp default_exercises do
+    [
       "Band Roundhouse Elbow",
       "Barbell Curl",
       "Bench Press",
@@ -40,9 +53,5 @@ defmodule Setup do
       "Triceps Pressdown",
       "Wide-Grip Pulldown"
     ]
-
-    for exercise <- default_exercises do
-      Workouts.upsert_exercise(%{name: exercise})
-    end
   end
 end

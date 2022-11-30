@@ -179,6 +179,19 @@ defmodule WeLift.Workouts do
   end
 
   @doc """
+  Deletes an exercise.
+
+  ## Examples
+
+    iex> delete_exercise("Bench Press")
+    {1, nil}
+
+  """
+  def delete_exercise(name) do
+    Repo.delete_all(from e in Exercise, where: e.name == ^name)
+  end
+
+  @doc """
   Returns an `%Ecto.Changeset{}` for tracking set changes.
 
   ## Examples
