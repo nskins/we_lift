@@ -3,13 +3,13 @@ defmodule WeLift.Repo.Migrations.AddDefaultExercises do
   alias WeLift.Workouts
 
   def up do
-    for exercise <- default_exercises do
+    for exercise <- default_exercises() do
       Workouts.upsert_exercise(%{name: exercise})
     end
   end
 
   def down do
-    for exercise <- default_exercises do
+    for exercise <- default_exercises() do
       Workouts.delete_exercise(exercise)
     end
   end
