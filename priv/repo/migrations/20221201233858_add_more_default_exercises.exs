@@ -36,6 +36,7 @@ defmodule WeLift.Repo.Migrations.AddMoreDefaultExercises do
       "Preacher Curl",
       "Reverse-Grip Incline Dumbbell Press",
       "Reverse-Grip Pulldown",
+      "Reverse Machine Flye",
       "Seated Cable Row",
       "Seated Leg Curl",
       "Smith Machine Upright Row"
