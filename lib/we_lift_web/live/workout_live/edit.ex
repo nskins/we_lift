@@ -59,6 +59,7 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
 
     exercises =
       Workouts.list_exercises()
+      |> Sort.alphabetically(& &1.name)
       |> Enum.map(fn e -> {e.name, e.id} end)
 
     set = %Set{}
