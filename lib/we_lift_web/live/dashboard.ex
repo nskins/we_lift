@@ -50,8 +50,8 @@ defmodule WeLiftWeb.DashboardLive do
         <div class='flex flex-row'>
           <div class='grow'><%= finished_status(@workout) %></div>
           <div class='flex flex-row'>
-            <Heroicons.eye solid class="h-5 w-5" phx-click={show_workout(@workout)} />
-            <Heroicons.pencil solid class="h-5 w-5" phx-click={edit_workout(@workout)} />
+            <Heroicons.eye solid class="mx-2 h-5 w-5 cursor-pointer" phx-click={show_workout(@workout)} />
+            <Heroicons.pencil solid class="mx-2 h-5 w-5 cursor-pointer" phx-click={edit_workout(@workout)} />
           </div>
         </div>
       </div>
