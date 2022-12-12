@@ -9,6 +9,10 @@ defmodule WeLiftWeb.DashboardLive do
     <.header>Dashboard</.header>
 
     <.button phx-click="start_workout">Start New Workout</.button>
+    
+    <%= for workout <- @workouts do %>
+      <.workout workout={workout} />
+    <% end %>
 
     <.table id="workouts" rows={@workouts}>
       <:col :let={workout} label="date"><%= WeLift.Date.prettify(workout.inserted_at) %></:col>
@@ -37,6 +41,21 @@ defmodule WeLiftWeb.DashboardLive do
     {:noreply,
      socket
      |> redirect(to: ~p"/workouts/#{workout.id}/edit")}
+  end
+  
+  defp workout(assigns) do
+    ~H"""
+      <div class='m-4'>
+        <div><%= WeLift.Date.prettify(@workout.inserted_at) %></div>
+        <div class='flex flex-row'>
+          <div class='grow'><%= finished_status(@workout) %></div>
+          <div class='flex flex-row'>
+            <div phx-click={show_workout(@workout)}>Show</div>
+            <div phx-click={edit_workout(@workout)}>Edit</div>
+          </div>
+        </div>
+      </div>
+    """
   end
 
   defp edit_workout(workout) do
