@@ -6,24 +6,11 @@ defmodule WeLiftWeb.DashboardLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <.header>Dashboard</.header>
-
     <.button phx-click="start_workout">Start New Workout</.button>
     
     <%= for workout <- @workouts do %>
       <.workout workout={workout} />
     <% end %>
-
-    <.table id="workouts" rows={@workouts}>
-      <:col :let={workout} label="date"><%= WeLift.Date.prettify(workout.inserted_at) %></:col>
-      <:col :let={workout} label="finished"><%= finished_status(workout) %></:col>
-      <:col :let={workout} label="show">
-        <.button phx-click={show_workout(workout)}>Show</.button>
-      </:col>
-      <:col :let={workout} label="edit">
-        <.button phx-click={edit_workout(workout)}>Edit</.button>
-      </:col>
-    </.table>
     """
   end
 
