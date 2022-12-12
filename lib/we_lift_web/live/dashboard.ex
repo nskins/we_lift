@@ -32,7 +32,7 @@ defmodule WeLiftWeb.DashboardLive do
   
   defp workout(assigns) do
     ~H"""
-      <div class='m-4'>
+      <div class='m-6'>
         <div><%= WeLift.Date.prettify(@workout.inserted_at) %></div>
         <div class='flex flex-row'>
           <div class='grow'><%= finished_status(@workout) %></div>
