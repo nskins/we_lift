@@ -7,7 +7,7 @@ defmodule WeLiftWeb.DashboardLive do
   def render(assigns) do
     ~H"""
     <.button phx-click="start_workout">Start New Workout</.button>
-    
+
     <%= for workout <- @workouts do %>
       <.workout workout={workout} />
     <% end %>
@@ -29,19 +29,23 @@ defmodule WeLiftWeb.DashboardLive do
      socket
      |> redirect(to: ~p"/workouts/#{workout.id}/edit")}
   end
-  
+
   defp workout(assigns) do
     ~H"""
-      <div class='m-6'>
-        <div><%= WeLift.Date.prettify(@workout.inserted_at) %></div>
-        <div class='flex flex-row'>
-          <.workout_status workout={@workout} />
-          <div class='flex flex-row'>
-            <Heroicons.eye solid class="mx-2 h-5 w-5 cursor-pointer" phx-click={show_workout(@workout)} />
-            <Heroicons.pencil solid class="mx-2 h-5 w-5 cursor-pointer" phx-click={edit_workout(@workout)} />
-          </div>
+    <div class="m-6">
+      <div><%= WeLift.Date.prettify(@workout.inserted_at) %></div>
+      <div class="flex flex-row">
+        <.workout_status workout={@workout} />
+        <div class="flex flex-row">
+          <Heroicons.eye solid class="mx-2 h-5 w-5 cursor-pointer" phx-click={show_workout(@workout)} />
+          <Heroicons.pencil
+            solid
+            class="mx-2 h-5 w-5 cursor-pointer"
+            phx-click={edit_workout(@workout)}
+          />
         </div>
       </div>
+    </div>
     """
   end
 
@@ -59,9 +63,9 @@ defmodule WeLiftWeb.DashboardLive do
     style = "grow text-#{color}-700"
 
     ~H"""
-      <div class={style}>
-        <%= text %>
-      </div>
+    <div class={style}>
+      <%= text %>
+    </div>
     """
   end
 
