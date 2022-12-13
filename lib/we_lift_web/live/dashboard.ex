@@ -60,19 +60,22 @@ defmodule WeLiftWeb.DashboardLive do
   defp workout_status(assigns) do
     {text, color} = finished_status(assigns.workout)
 
-    style = "grow text-#{color}-700"
+    assigns =
+      assigns
+      |> assign(:text, text)
+      |> assign(:style, "grow #{color}")
 
     ~H"""
-    <div class={style}>
-      <%= text %>
+    <div class={@style}>
+      <%= @text %>
     </div>
     """
   end
 
   defp finished_status(workout) do
     case workout.finished_at do
-      nil -> {"Unfinished", "red"}
-      _ -> {"Finished", "green"}
+      nil -> {"Unfinished", "text-red-700"}
+      _ -> {"Finished", "text-green-700"}
     end
   end
 end
