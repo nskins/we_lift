@@ -6,20 +6,11 @@ defmodule WeLiftWeb.DashboardLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <.header>Dashboard</.header>
-
     <.button phx-click="start_workout">Start New Workout</.button>
 
-    <.table id="workouts" rows={@workouts}>
-      <:col :let={workout} label="date"><%= WeLift.Date.prettify(workout.inserted_at) %></:col>
-      <:col :let={workout} label="finished"><%= finished_status(workout) %></:col>
-      <:col :let={workout} label="show">
-        <.button phx-click={show_workout(workout)}>Show</.button>
-      </:col>
-      <:col :let={workout} label="edit">
-        <.button phx-click={edit_workout(workout)}>Edit</.button>
-      </:col>
-    </.table>
+    <%= for workout <- @workouts do %>
+      <.workout workout={workout} />
+    <% end %>
     """
   end
 
@@ -39,6 +30,25 @@ defmodule WeLiftWeb.DashboardLive do
      |> redirect(to: ~p"/workouts/#{workout.id}/edit")}
   end
 
+  defp workout(assigns) do
+    ~H"""
+    <div class="m-6">
+      <div><%= WeLift.Date.prettify(@workout.inserted_at) %></div>
+      <div class="flex flex-row">
+        <.workout_status workout={@workout} />
+        <div class="flex flex-row">
+          <Heroicons.eye solid class="mx-2 h-5 w-5 cursor-pointer" phx-click={show_workout(@workout)} />
+          <Heroicons.pencil
+            solid
+            class="mx-2 h-5 w-5 cursor-pointer"
+            phx-click={edit_workout(@workout)}
+          />
+        </div>
+      </div>
+    </div>
+    """
+  end
+
   defp edit_workout(workout) do
     JS.navigate(~p"/workouts/#{workout.id}/edit")
   end
@@ -47,10 +57,25 @@ defmodule WeLiftWeb.DashboardLive do
     JS.navigate(~p"/workouts/#{workout.id}")
   end
 
+  defp workout_status(assigns) do
+    {text, color} = finished_status(assigns.workout)
+
+    assigns =
+      assigns
+      |> assign(:text, text)
+      |> assign(:style, "grow #{color}")
+
+    ~H"""
+    <div class={@style}>
+      <%= @text %>
+    </div>
+    """
+  end
+
   defp finished_status(workout) do
     case workout.finished_at do
-      nil -> "Unfinished"
-      _ -> "Finished"
+      nil -> {"Unfinished", "text-red-700"}
+      _ -> {"Finished", "text-green-700"}
     end
   end
 end
