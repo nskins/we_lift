@@ -4,10 +4,10 @@ defmodule WeLift.Sort do
   end
 
   def chronologically(list) do
-    Enum.sort(list, &(&1.inserted_at <= &2.inserted_at))
+    Enum.sort(list, &(NaiveDateTime.compare(&1.inserted_at, &2.inserted_at) == :lt))
   end
 
   def reverse_chronologically(list) do
-    Enum.sort(list, &(&1.inserted_at >= &2.inserted_at))
+    Enum.sort(list, &(NaiveDateTime.compare(&1.inserted_at, &2.inserted_at) == :gt))
   end
 end
