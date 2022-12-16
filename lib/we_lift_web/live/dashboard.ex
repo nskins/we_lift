@@ -1,6 +1,7 @@
 defmodule WeLiftWeb.DashboardLive do
   use WeLiftWeb, :live_view
 
+  alias WeLift.Sort
   alias WeLift.Workouts
 
   @impl true
@@ -8,7 +9,7 @@ defmodule WeLiftWeb.DashboardLive do
     ~H"""
     <.button phx-click="start_workout">Start New Workout</.button>
 
-    <%= for workout <- @workouts do %>
+    <%= for workout <- Sort.reverse_chronologically(@workouts) do %>
       <.workout workout={workout} />
     <% end %>
     """
