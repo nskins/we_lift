@@ -8,7 +8,7 @@ defmodule WeLiftWeb.WorkoutLive.Show do
   def render(assigns) do
     ~H"""
     <.header>Workout</.header>
-
+    <div><%= WeLift.Date.prettify(@workout.inserted_at) %></div>
     <.table id="sets" rows={Sort.chronologically(@workout.sets)}>
       <:col :let={set} label="exercise"><%= set.exercise.name %></:col>
       <:col :let={set} label="weight_in_lbs"><%= set.weight_in_lbs %></:col>
