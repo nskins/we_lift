@@ -27,8 +27,8 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
 
       <.input field={{f, :workout_id}} type="hidden" value={@workout.id} />
       <.input field={{f, :exercise_id}} type="select" options={@exercises} required />
-      <.input field={{f, :weight_in_lbs}} label="Weight (lbs.)" required />
-      <.input field={{f, :reps}} label="Reps" required />
+      <.input field={{f, :weight_in_lbs}} label="Weight (lbs.)" required autocomplete="off" />
+      <.input field={{f, :reps}} label="Reps" required autocomplete="off" />
 
       <:actions>
         <.button phx-disable-with="Adding...">Finish Set</.button>
