@@ -9,11 +9,20 @@ defmodule WeLiftWeb.WorkoutLive.Show do
     ~H"""
     <.header>Workout</.header>
     <div><%= WeLift.Date.prettify(@workout.inserted_at) %></div>
-    <.table id="sets" rows={Sort.chronologically(@workout.sets)}>
-      <:col :let={set} label="exercise"><%= set.exercise.name %></:col>
-      <:col :let={set} label="weight_in_lbs"><%= set.weight_in_lbs %></:col>
-      <:col :let={set} label="reps"><%= set.reps %></:col>
-    </.table>
+    <%= for set <- Sort.chronologically(@workout.sets) do %>
+      <.set set={set} />
+    <% end %>
+    """
+  end
+
+  defp set(assigns) do
+    ~H"""
+    <div class="m-6">
+      <div class="font-bold"><%= @set.exercise.name %></div>
+      <div class="flex flex-row">
+        <div><%= @set.weight_in_lbs %> lbs. (x<%= @set.reps %>)</div>
+      </div>
+    </div>
     """
   end
 
