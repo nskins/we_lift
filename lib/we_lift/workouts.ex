@@ -190,6 +190,26 @@ defmodule WeLift.Workouts do
   end
 
   @doc """
+  Deletes a set.
+
+  Raises `MatchError` if the User is not authorized to delete the set.
+
+  ## Examples
+
+    iex> delete_set(%{id: 5}, 16, 4)
+    {1, nil}
+
+  """
+  def delete_set(user, set_id, workout) do
+    user_id = user.id
+
+    # This ensures the original workout belongs to the user.
+    %Workout{user_id: ^user_id} = workout
+
+    Repo.delete_all(from s in Set, where: s.id == ^set_id)
+  end
+
+  @doc """
   Returns an `%Ecto.Changeset{}` for tracking set changes.
 
   ## Examples
