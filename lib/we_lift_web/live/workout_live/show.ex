@@ -39,4 +39,17 @@ defmodule WeLiftWeb.WorkoutLive.Show do
      socket
      |> assign(:workout, workout)}
   end
+
+  @impl true
+  def handle_event("delete_set", %{"id" => id}, socket) do
+    Workouts.delete_set(socket.assigns.current_user, id, socket.assigns.workout)
+
+    workout =
+      Workouts.get_workout!(
+        socket.assigns.current_user,
+        socket.assigns.workout.id
+      )
+
+    {:noreply, assign(socket, :workout, workout)}
+  end
 end
