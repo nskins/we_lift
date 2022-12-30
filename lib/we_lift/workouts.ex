@@ -146,8 +146,6 @@ defmodule WeLift.Workouts do
     # This ensures the original workout belongs to the user.
     %Workout{user_id: ^user_id} = workout
 
-    IO.inspect(attrs)
-
     # This ensures the user is not trying to update
     # the workout to belong to another user.
     %{"user_id" => ^user_id} = attrs
@@ -189,6 +187,26 @@ defmodule WeLift.Workouts do
   """
   def delete_exercise(name) do
     Repo.delete_all(from e in Exercise, where: e.name == ^name)
+  end
+
+  @doc """
+  Deletes a set.
+
+  Raises `MatchError` if the User is not authorized to delete the set.
+
+  ## Examples
+
+    iex> delete_set(%{id: 5}, 16, %{id: 4})
+    {1, nil}
+
+  """
+  def delete_set(user, set_id, workout) do
+    user_id = user.id
+
+    # This ensures the original workout belongs to the user.
+    %Workout{user_id: ^user_id} = workout
+
+    Repo.delete_all(from s in Set, where: s.id == ^set_id)
   end
 
   @doc """
