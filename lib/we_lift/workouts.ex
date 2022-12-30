@@ -196,7 +196,7 @@ defmodule WeLift.Workouts do
 
   ## Examples
 
-    iex> delete_set(%{id: 5}, 16, 4)
+    iex> delete_set(%{id: 5}, 16, %{id: 4})
     {1, nil}
 
   """
