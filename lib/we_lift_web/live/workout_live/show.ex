@@ -26,6 +26,7 @@ defmodule WeLiftWeb.WorkoutLive.Show do
           class="mx-2 h-5 w-5 cursor-pointer"
           phx-click="delete_set"
           phx_value_id={@set.id}
+          data={[confirm: "Are you sure?"]}
         />
       </div>
     </div>
