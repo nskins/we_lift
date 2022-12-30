@@ -20,8 +20,13 @@ defmodule WeLiftWeb.WorkoutLive.Show do
     <div class="m-6">
       <div class="font-bold"><%= @set.exercise.name %></div>
       <div class="flex flex-row">
-        <div class='grow'><%= @set.weight_in_lbs %> lbs. (x<%= @set.reps %>)</div>
-        <Heroicons.trash solid class="mx-2 h-5 w-5 cursor-pointer" phx-click={} />
+        <div class="grow"><%= @set.weight_in_lbs %> lbs. (x<%= @set.reps %>)</div>
+        <Heroicons.trash
+          solid
+          class="mx-2 h-5 w-5 cursor-pointer"
+          phx-click="delete_set"
+          phx_value_id={@set.id}
+        />
       </div>
     </div>
     """
