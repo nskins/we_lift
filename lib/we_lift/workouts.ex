@@ -146,8 +146,6 @@ defmodule WeLift.Workouts do
     # This ensures the original workout belongs to the user.
     %Workout{user_id: ^user_id} = workout
 
-    IO.inspect(attrs)
-
     # This ensures the user is not trying to update
     # the workout to belong to another user.
     %{"user_id" => ^user_id} = attrs
