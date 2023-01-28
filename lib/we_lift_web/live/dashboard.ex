@@ -5,7 +5,8 @@ defmodule WeLiftWeb.DashboardLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <p>Dashboard</p>
+    <.header>Dashboard</.header>
+    <.link navigate={~p"/workouts"} class="text-blue-500 underline">Workouts</.link>
     """
   end
 
