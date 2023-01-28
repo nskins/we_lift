@@ -6,7 +6,10 @@ defmodule WeLiftWeb.DashboardLive do
   def render(assigns) do
     ~H"""
     <.header>Dashboard</.header>
-    <.link navigate={~p"/workouts"} class="text-blue-500 underline">Workouts</.link>
+    <div class="flex flex-col">
+      <.link navigate={~p"/workouts"} class="text-blue-500 underline">Workouts</.link>
+      <.link navigate={~p"/exercises/history"} class="text-blue-500 underline">Exercise History</.link>
+    </div>
     """
   end
 
