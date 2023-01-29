@@ -12,7 +12,7 @@ defmodule WeLiftWeb.ExerciseLive.History do
     <.input
       id="exercise_input"
       name="exercise_input"
-      value={109}
+      value={@selected_exercise_id}
       errors={[]}
       type="select"
       options={@exercises}
@@ -27,8 +27,11 @@ defmodule WeLiftWeb.ExerciseLive.History do
       |> Sort.alphabetically(& &1.name)
       |> Enum.map(fn e -> {e.name, e.id} end)
 
+    {_, selected_exercise_id} = Enum.at(exercises, 0)
+
     {:ok,
      socket
-     |> assign(:exercises, exercises)}
+     |> assign(:exercises, exercises)
+     |> assign(:selected_exercise_id, selected_exercise_id)}
   end
 end
