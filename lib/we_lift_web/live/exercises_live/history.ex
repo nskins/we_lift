@@ -100,11 +100,16 @@ defmodule WeLiftWeb.ExerciseLive.History do
   end
 
   defp chart_svg(sets) do
-    sets
-      |> Enum.map(fn s -> [s.inserted_at, s.weight_in_lbs] end)
-      |> Contex.Dataset.new()
-      |> Contex.Plot.new(Contex.LinePlot, 600, 400)
-      |> Contex.Plot.to_svg()
+    case sets do
+      [] -> "Not enough data available."
+      [_] -> "Not enough data available."
+      _ ->
+        sets
+          |> Enum.map(fn s -> [s.inserted_at, s.weight_in_lbs] end)
+          |> Contex.Dataset.new()
+          |> Contex.Plot.new(Contex.LinePlot, 600, 400)
+          |> Contex.Plot.to_svg()
+    end
   end
 
 end
