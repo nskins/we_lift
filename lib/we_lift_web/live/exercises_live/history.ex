@@ -53,7 +53,7 @@ defmodule WeLiftWeb.ExerciseLive.History do
     {_, selected_duration} = Enum.at(durations, 0)
 
     sets = Workouts.get_historical_sets_by_exercise(socket.assigns.current_user.id, selected_exercise_id, selected_duration)
-    
+
     {:ok,
      socket
      |> assign(:exercises, exercises)
@@ -105,7 +105,7 @@ defmodule WeLiftWeb.ExerciseLive.History do
       [_] -> "Not enough data available."
       _ ->
         sets
-          |> Enum.map(fn s -> [s.inserted_at, s.weight_in_lbs] end)
+          |> Enum.map(fn {a, b} -> [a, b] end)
           |> Contex.Dataset.new()
           |> Contex.Plot.new(Contex.LinePlot, 600, 400, smoothed: false)
           |> Contex.Plot.to_svg()
