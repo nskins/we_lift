@@ -28,6 +28,8 @@ defmodule WeLiftWeb.ExerciseLive.History do
       options={@durations}
       phx-click="update_duration"
     />
+
+    <.chart sets={@sets} />
     """
   end
 
@@ -42,40 +44,67 @@ defmodule WeLiftWeb.ExerciseLive.History do
 
     durations =
       [
-        "One month": "1M",
-        "Three months": "3M",
-        "Six months": "6M",
-        "One year": "1Y"
+        "One month": 1,
+        "Three months": 3,
+        "Six months": 6,
+        "One year": 12
       ]
 
     {_, selected_duration} = Enum.at(durations, 0)
 
+    sets = Workouts.get_historical_sets_by_exercise(socket.assigns.current_user.id, selected_exercise_id, selected_duration)
+    
     {:ok,
      socket
      |> assign(:exercises, exercises)
      |> assign(:selected_exercise_id, selected_exercise_id)
      |> assign(:durations, durations)
-     |> assign(:selected_duration, selected_duration)}
+     |> assign(:selected_duration, selected_duration)
+     |> assign(:sets, sets)}
   end
   
   @impl true
   def handle_event("update_exercise_id", %{"value" => new_exercise_value}, socket) do
     
-   new_exercise_id = String.to_integer(new_exercise_value) 
+   new_exercise_id = String.to_integer(new_exercise_value)
 
     case socket.assigns.selected_exercise_id do
       ^new_exercise_id -> {:noreply, socket}
-      _ -> {:noreply, assign(socket, :selected_exercise_id, new_exercise_id)}
+      _ -> 
+        sets = Workouts.get_historical_sets_by_exercise(socket.assigns.current_user.id, new_exercise_id, socket.assigns.selected_duration)
+        {:noreply, socket
+                      |> assign(:selected_exercise_id, new_exercise_id)
+                      |> assign(:sets, sets)}
     end
   end
 
   @impl true
-  def handle_event("update_duration", %{"value" => new_duration}, socket) do
+  def handle_event("update_duration", %{"value" => new_duration_value}, socket) do
+
+    new_duration = String.to_integer(new_duration_value)
 
     case socket.assigns.selected_duration do
       ^new_duration -> {:noreply, socket}
-      _ -> {:noreply, assign(socket, :selected_duration, new_duration)}
+      _ -> 
+        sets = Workouts.get_historical_sets_by_exercise(socket.assigns.current_user.id, socket.assigns.selected_exercise_id, new_duration)
+        {:noreply, socket
+                   |> assign(:selected_duration, new_duration)
+                   |> assign(:sets, sets)}
     end
+  end
+
+  defp chart(assigns) do
+    ~H"""
+    <%= chart_svg(@sets) %>
+    """
+  end
+
+  defp chart_svg(sets) do
+    sets
+      |> Enum.map(fn s -> [s.inserted_at, s.weight_in_lbs] end)
+      |> Contex.Dataset.new()
+      |> Contex.Plot.new(Contex.LinePlot, 600, 400)
+      |> Contex.Plot.to_svg()
   end
 
 end
