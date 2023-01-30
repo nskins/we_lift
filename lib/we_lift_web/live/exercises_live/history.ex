@@ -107,7 +107,7 @@ defmodule WeLiftWeb.ExerciseLive.History do
         sets
           |> Enum.map(fn s -> [s.inserted_at, s.weight_in_lbs] end)
           |> Contex.Dataset.new()
-          |> Contex.Plot.new(Contex.LinePlot, 600, 400)
+          |> Contex.Plot.new(Contex.LinePlot, 600, 400, smoothed: false)
           |> Contex.Plot.to_svg()
     end
   end
