@@ -42,13 +42,12 @@ defmodule WeLiftWeb.ExerciseLive.History do
 
     {_, selected_exercise_id} = Enum.at(exercises, 0)
 
-    durations =
-      [
-        "One month": 1,
-        "Three months": 3,
-        "Six months": 6,
-        "One year": 12
-      ]
+    durations = [
+      "One month": 1,
+      "Three months": 3,
+      "Six months": 6,
+      "One year": 12
+    ]
 
     {_, selected_duration} = Enum.at(durations, 0)
 
@@ -62,32 +61,50 @@ defmodule WeLiftWeb.ExerciseLive.History do
      |> assign(:selected_duration, selected_duration)
      |> assign(:sets, sets)}
   end
-  
+
   @impl true
   def handle_event("update_exercise_id", %{"value" => new_exercise_value}, socket) do
-    
-   new_exercise_id = String.to_integer(new_exercise_value)
+    new_exercise_id = String.to_integer(new_exercise_value)
 
     case socket.assigns.selected_exercise_id do
-      ^new_exercise_id -> {:noreply, socket}
-      _ -> 
-        {:noreply, socket
-                      |> assign(:selected_exercise_id, new_exercise_id)
-                      |> assign(:sets, reload_sets(socket.assigns.current_user.id, new_exercise_id, socket.assigns.selected_duration))}
+      ^new_exercise_id ->
+        {:noreply, socket}
+
+      _ ->
+        {:noreply,
+         socket
+         |> assign(:selected_exercise_id, new_exercise_id)
+         |> assign(
+           :sets,
+           reload_sets(
+             socket.assigns.current_user.id,
+             new_exercise_id,
+             socket.assigns.selected_duration
+           )
+         )}
     end
   end
 
   @impl true
   def handle_event("update_duration", %{"value" => new_duration_value}, socket) do
-
     new_duration = String.to_integer(new_duration_value)
 
     case socket.assigns.selected_duration do
-      ^new_duration -> {:noreply, socket}
-      _ -> 
-        {:noreply, socket
-                   |> assign(:selected_duration, new_duration)
-                   |> assign(:sets, reload_sets(socket.assigns.current_user.id, socket.assigns.selected_exercise_id, new_duration))}
+      ^new_duration ->
+        {:noreply, socket}
+
+      _ ->
+        {:noreply,
+         socket
+         |> assign(:selected_duration, new_duration)
+         |> assign(
+           :sets,
+           reload_sets(
+             socket.assigns.current_user.id,
+             socket.assigns.selected_exercise_id,
+             new_duration
+           )
+         )}
     end
   end
 
@@ -99,19 +116,22 @@ defmodule WeLiftWeb.ExerciseLive.History do
 
   defp chart_svg(sets) do
     case sets do
-      [] -> "Not enough data available."
-      [_] -> "Not enough data available."
+      [] ->
+        "Not enough data available."
+
+      [_] ->
+        "Not enough data available."
+
       _ ->
         sets
-          |> Enum.map(fn {a, b} -> [a, b] end)
-          |> Contex.Dataset.new()
-          |> Contex.Plot.new(Contex.LinePlot, 600, 400, smoothed: false)
-          |> Contex.Plot.to_svg()
+        |> Enum.map(fn {a, b} -> [a, b] end)
+        |> Contex.Dataset.new()
+        |> Contex.Plot.new(Contex.LinePlot, 600, 400, smoothed: false)
+        |> Contex.Plot.to_svg()
     end
   end
 
   defp reload_sets(user_id, exercise_id, duration) do
     Workouts.get_historical_sets_by_exercise(user_id, exercise_id, duration)
   end
-
 end
