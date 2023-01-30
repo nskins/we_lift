@@ -52,7 +52,7 @@ defmodule WeLiftWeb.ExerciseLive.History do
 
     {_, selected_duration} = Enum.at(durations, 0)
 
-    sets = Workouts.get_historical_sets_by_exercise(socket.assigns.current_user.id, selected_exercise_id, selected_duration)
+    sets = reload_sets(socket.assigns.current_user.id, selected_exercise_id, selected_duration)
 
     {:ok,
      socket
@@ -71,10 +71,9 @@ defmodule WeLiftWeb.ExerciseLive.History do
     case socket.assigns.selected_exercise_id do
       ^new_exercise_id -> {:noreply, socket}
       _ -> 
-        sets = Workouts.get_historical_sets_by_exercise(socket.assigns.current_user.id, new_exercise_id, socket.assigns.selected_duration)
         {:noreply, socket
                       |> assign(:selected_exercise_id, new_exercise_id)
-                      |> assign(:sets, sets)}
+                      |> assign(:sets, reload_sets(socket.assigns.current_user.id, new_exercise_id, socket.assigns.selected_duration))}
     end
   end
 
@@ -86,10 +85,9 @@ defmodule WeLiftWeb.ExerciseLive.History do
     case socket.assigns.selected_duration do
       ^new_duration -> {:noreply, socket}
       _ -> 
-        sets = Workouts.get_historical_sets_by_exercise(socket.assigns.current_user.id, socket.assigns.selected_exercise_id, new_duration)
         {:noreply, socket
                    |> assign(:selected_duration, new_duration)
-                   |> assign(:sets, sets)}
+                   |> assign(:sets, reload_sets(socket.assigns.current_user.id, socket.assigns.selected_exercise_id, new_duration))}
     end
   end
 
@@ -110,6 +108,10 @@ defmodule WeLiftWeb.ExerciseLive.History do
           |> Contex.Plot.new(Contex.LinePlot, 600, 400, smoothed: false)
           |> Contex.Plot.to_svg()
     end
+  end
+
+  defp reload_sets(user_id, exercise_id, duration) do
+    Workouts.get_historical_sets_by_exercise(user_id, exercise_id, duration)
   end
 
 end
