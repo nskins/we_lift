@@ -94,7 +94,9 @@ defmodule WeLift.Workouts do
     query =
       from s in Set,
         join: w in Workout, on: w.id == s.workout_id,
-        where: w.user_id == ^user_id and s.exercise_id == ^exercise_id and s.inserted_at > ago(^months_back, "month") 
+        where: w.user_id == ^user_id and s.exercise_id == ^exercise_id and s.inserted_at > ago(^months_back, "month"),
+        group_by: [fragment("?::date", s.inserted_at)],
+        select: {max(s.inserted_at), max(s.weight_in_lbs)}
 
     Repo.all(query)
   end
