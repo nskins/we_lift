@@ -96,7 +96,7 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
         {:noreply,
          socket
          |> put_flash(:info, "Workout finished!")
-         |> redirect(to: ~p"/dashboard")}
+         |> redirect(to: ~p"/workouts")}
 
       {:error, %Ecto.Changeset{} = _changeset} ->
         {:noreply, socket |> put_flash(:error, "Unable to update Workout!")}
