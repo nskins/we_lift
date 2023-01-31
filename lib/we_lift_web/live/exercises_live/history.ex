@@ -9,25 +9,25 @@ defmodule WeLiftWeb.ExerciseLive.History do
     ~H"""
     <.header>Exercise History</.header>
 
-    <.input
-      id="exercise_input"
-      name="exercise_input"
-      value={@selected_exercise_id}
-      errors={[]}
-      type="select"
-      options={@exercises}
-      phx-click="update_exercise_id"
-    />
+    <form phx-change="input_changed" id="exercise_history_form">
+      <.input
+        id="exercise_input"
+        name="exercise_input"
+        value={@selected_exercise_id}
+        errors={[]}
+        type="select"
+        options={@exercises}
+      />
 
-    <.input
-      id="duration_input"
-      name="duration_input"
-      value={@selected_duration}
-      errors={[]}
-      type="select"
-      options={@durations}
-      phx-click="update_duration"
-    />
+      <.input
+        id="duration_input"
+        name="duration_input"
+        value={@selected_duration}
+        errors={[]}
+        type="select"
+        options={@durations}
+      />
+    </form>
 
     <.chart sets={@sets} />
     """
@@ -63,49 +63,26 @@ defmodule WeLiftWeb.ExerciseLive.History do
   end
 
   @impl true
-  def handle_event("update_exercise_id", %{"value" => new_exercise_value}, socket) do
+  def handle_event(
+        "input_changed",
+        %{"duration_input" => new_duration_value, "exercise_input" => new_exercise_value},
+        socket
+      ) do
+    new_duration = String.to_integer(new_duration_value)
     new_exercise_id = String.to_integer(new_exercise_value)
 
-    case socket.assigns.selected_exercise_id do
-      ^new_exercise_id ->
-        {:noreply, socket}
-
-      _ ->
-        {:noreply,
-         socket
-         |> assign(:selected_exercise_id, new_exercise_id)
-         |> assign(
-           :sets,
-           reload_sets(
-             socket.assigns.current_user.id,
-             new_exercise_id,
-             socket.assigns.selected_duration
-           )
-         )}
-    end
-  end
-
-  @impl true
-  def handle_event("update_duration", %{"value" => new_duration_value}, socket) do
-    new_duration = String.to_integer(new_duration_value)
-
-    case socket.assigns.selected_duration do
-      ^new_duration ->
-        {:noreply, socket}
-
-      _ ->
-        {:noreply,
-         socket
-         |> assign(:selected_duration, new_duration)
-         |> assign(
-           :sets,
-           reload_sets(
-             socket.assigns.current_user.id,
-             socket.assigns.selected_exercise_id,
-             new_duration
-           )
-         )}
-    end
+    {:noreply,
+     socket
+     |> assign(:selected_duration, new_duration)
+     |> assign(:selected_exercise_id, new_exercise_id)
+     |> assign(
+       :sets,
+       reload_sets(
+         socket.assigns.current_user.id,
+         new_exercise_id,
+         new_duration
+       )
+     )}
   end
 
   defp chart(assigns) do
