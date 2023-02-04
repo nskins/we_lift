@@ -8,6 +8,8 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
   @impl true
   def render(assigns) do
     ~H"""
+    <.back navigate={~p"/workouts"}>Back to Workouts</.back>
+
     <.simple_form
       :let={f}
       for={@changeset}
