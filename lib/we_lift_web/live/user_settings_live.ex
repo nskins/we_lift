@@ -5,6 +5,8 @@ defmodule WeLiftWeb.UserSettingsLive do
 
   def render(assigns) do
     ~H"""
+    <.back navigate={~p"/dashboard"}>Back to Dashboard</.back>
+
     <.header>Change Email</.header>
 
     <.simple_form
