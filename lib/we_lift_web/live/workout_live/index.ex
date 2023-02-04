@@ -7,6 +7,8 @@ defmodule WeLiftWeb.WorkoutLive.Index do
   @impl true
   def render(assigns) do
     ~H"""
+    <.back navigate={~p"/dashboard"}>Back to Dashboard</.back>
+
     <.button phx-click="start_workout">Start New Workout</.button>
 
     <%= for workout <- Sort.reverse_chronologically(@workouts) do %>
