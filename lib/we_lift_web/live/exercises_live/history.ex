@@ -7,6 +7,8 @@ defmodule WeLiftWeb.ExerciseLive.History do
   @impl true
   def render(assigns) do
     ~H"""
+    <.back navigate={~p"/dashboard"}>Back to Dashboard</.back>
+
     <.header>Exercise History</.header>
 
     <form phx-change="input_changed" id="exercise_history_form">
