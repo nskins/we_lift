@@ -8,6 +8,7 @@ defmodule WeLiftWeb.WorkoutLive.Show do
   def render(assigns) do
     ~H"""
     <.back navigate={~p"/workouts"}>Back to Workouts</.back>
+
     <.header>Workout</.header>
     <div><%= WeLift.Date.prettify(@workout.inserted_at) %></div>
     <%= for set <- Sort.chronologically(@workout.sets) do %>
