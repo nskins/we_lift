@@ -65,6 +65,7 @@ defmodule WeLiftWeb.Router do
 
     live_session :require_authenticated_user,
       on_mount: [{WeLiftWeb.UserAuth, :ensure_authenticated}] do
+      live "/users/exercises", UserExercisesLive, :home
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
       live "/dashboard", DashboardLive, :home
