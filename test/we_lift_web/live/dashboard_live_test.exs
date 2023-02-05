@@ -23,7 +23,7 @@ defmodule WeLiftWeb.DashboardLiveTest do
     end
 
     test "redirects to exercise history page", %{conn: conn} do
-      {:ok, index_live, _html} = live(conn, ~p"/dashboard")
+      {:ok, index_live, _} = live(conn, ~p"/dashboard")
 
       {:ok, _, html} =
         index_live
@@ -32,6 +32,18 @@ defmodule WeLiftWeb.DashboardLiveTest do
         |> follow_redirect(conn)
 
       assert html =~ "Exercise History"
+    end
+
+    test "redirects to custom exercises page", %{conn: conn} do
+      {:ok, index_live, _} = live(conn, ~p"/dashboard")
+
+      {:ok, _, html} =
+        index_live
+        |> element("a", "Custom Exercises")
+        |> render_click()
+        |> follow_redirect(conn)
+
+      assert html =~ "Custom Exercises"
     end
   end
 end
