@@ -10,11 +10,19 @@ defmodule WeLiftWeb.UserExercisesLive do
     <.back navigate={~p"/dashboard"}>Back to Dashboard</.back>
 
     <.header>Custom Exercises</.header>
+
+    <%= for exercise <- @exercises do %>
+      <div><%= exercise.name %></div>
+    <% end %>
     """
   end
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, socket}
+    exercises = Workouts.get_custom_exercises(socket.assigns.current_user.id)
+
+    {:ok,
+     socket
+     |> assign(:exercises, exercises)}
   end
 end
