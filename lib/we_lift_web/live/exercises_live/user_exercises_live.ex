@@ -19,7 +19,9 @@ defmodule WeLiftWeb.UserExercisesLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    exercises = Workouts.get_custom_exercises(socket.assigns.current_user.id)
+    exercises =
+      Workouts.get_custom_exercises(socket.assigns.current_user.id)
+      |> Sort.alphabetically(& &1.name)
 
     {:ok,
      socket
