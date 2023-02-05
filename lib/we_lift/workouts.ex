@@ -90,6 +90,14 @@ defmodule WeLift.Workouts do
     Repo.all(query)
   end
 
+  def get_custom_exercises(user_id) do
+    query =
+      from e in Exercise,
+        where: e.user_id == ^user_id
+
+    Repo.all(query)
+  end
+
   def get_historical_sets_by_exercise(user_id, exercise_id, months_back) do
     query =
       from s in Set,
