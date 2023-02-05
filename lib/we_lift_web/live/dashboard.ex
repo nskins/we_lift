@@ -10,6 +10,7 @@ defmodule WeLiftWeb.DashboardLive do
       <.link navigate={~p"/exercises/history"} class="text-blue-500 underline">
         Exercise History
       </.link>
+      <.link navigate={~p"/users/exercises"} class="text-blue-500 underline">Custom Exercises</.link>
     </div>
     """
   end

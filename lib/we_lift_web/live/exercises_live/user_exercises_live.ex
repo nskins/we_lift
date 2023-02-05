@@ -16,5 +16,5 @@ defmodule WeLiftWeb.UserExercisesLive do
   @impl true
   def mount(_params, _session, socket) do
     {:ok, socket}
-  end 
+  end
 end
