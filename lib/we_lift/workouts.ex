@@ -232,6 +232,18 @@ defmodule WeLift.Workouts do
   end
 
   @doc """
+  Returns an `%Ecto.Changeset{}` for tracking exercise changes.
+
+  ## Examples
+      iex> change_exercise(exercise)
+      %Ecto.Changeset{data: %Exercise{}}
+
+  """
+  def change_exercise(%Exercise{} = exercise, attrs \\ %{}) do
+    Exercise.changeset(exercise, attrs)
+  end
+
+  @doc """
   Returns an `%Ecto.Changeset{}` for tracking set changes.
 
   ## Examples
