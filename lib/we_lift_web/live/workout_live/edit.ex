@@ -3,6 +3,7 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
 
   alias WeLift.Sort
   alias WeLift.Workouts
+  alias WeLift.Workouts.Exercise
   alias WeLift.Workouts.Set
 
   @impl true
@@ -27,8 +28,25 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
         <% end %>
       </div>
 
+      <%= if @live_action in [:new] do %>
+        <.modal id="new-exercise-modal" show={true}>
+          <.live_component
+            module={WeLiftWeb.ExerciseLive.NewExerciseComponent}
+            title={@page_title}
+            id={:new}
+            action={@live_action}
+            exercise={@exercise}
+            current_user={@current_user}
+            return_to={~p"/workouts/#{@workout.id}/edit"}
+          />
+        </.modal>
+      <% end %>
+
       <.input field={{f, :workout_id}} type="hidden" value={@workout.id} />
       <.input field={{f, :exercise_id}} type="select" options={@exercises} />
+
+      <%= live_patch "+ Add Custom Exercise", to: ~p"/workouts/#{@workout.id}/edit/exercises", class: "text-blue-700 underline p-2" %>
+
       <.input field={{f, :weight_in_lbs}} label="Weight (lbs.)" autocomplete="off" />
       <.input field={{f, :reps}} label="Reps" autocomplete="off" />
 
@@ -72,6 +90,23 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
      |> assign(:workout, workout)
      |> assign(:changeset, Workouts.change_set(set))
      |> assign(:exercises, exercises)}
+  end
+
+  @impl true
+  def handle_params(_params, _url, socket) do
+    {:noreply, apply_action(socket, socket.assigns.live_action)}
+  end
+
+  defp apply_action(socket, :new) do
+    socket
+    |> assign(:page_title, "Add Custom Exercise")
+    |> assign(:exercise, %Exercise{})
+  end
+
+  defp apply_action(socket, :edit) do
+    socket
+    |> assign(:page_title, "Edit Workout")
+    |> assign(:exercise, nil)
   end
 
   @impl true
