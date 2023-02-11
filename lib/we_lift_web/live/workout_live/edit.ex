@@ -48,7 +48,6 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
       <.modal id="new-exercise-modal" show={true}>
         <.live_component
           module={WeLiftWeb.ExerciseLive.NewExerciseComponent}
-          title={@page_title}
           id={:new}
           action={@live_action}
           exercise={@exercise}
@@ -101,13 +100,11 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
 
   defp apply_action(socket, :new) do
     socket
-    |> assign(:page_title, "Add Custom Exercise")
     |> assign(:exercise, %Exercise{})
   end
 
   defp apply_action(socket, :edit) do
     socket
-    |> assign(:page_title, "Edit Workout")
     |> assign(:exercise, nil)
   end
 
