@@ -9,6 +9,33 @@ defmodule WeLift.Workouts do
   alias WeLift.Workouts.Exercise
   alias WeLift.Workouts.Set
   alias WeLift.Workouts.Workout
+  
+  @doc """
+  Creates a user-specific exercise.
+
+  ## Examples
+
+    iex> create_exercise(%{id: 5}, %{name: "Power Clean"})
+    {:ok, %Exercise{}}
+
+    iex> create_exercise(%{id: 5}, %{name: ""})
+    {:error, %Ecto.Changeset{}}
+
+  """
+  def create_exercise(user, attrs \\ %{}) do
+    user_id = Integer.to_string(user.id)
+
+    IO.inspect(user_id)
+    IO.inspect(attrs["user_id"])
+
+    # This verifies that the User has permission to 
+    # create an Exercise with these parameters.
+    %{"user_id" => ^user_id} = attrs
+
+    %Exercise{}
+    |> Exercise.changeset(attrs)
+    |> Repo.insert()
+  end
 
   @doc """
   Creates a set.
