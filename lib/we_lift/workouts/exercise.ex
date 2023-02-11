@@ -15,7 +15,7 @@ defmodule WeLift.Workouts.Exercise do
   @doc false
   def changeset(exercise, attrs) do
     exercise
-    |> cast(attrs, [:name])
+    |> cast(attrs, [:name, :user_id])
     |> validate_required([:name])
   end
 end
