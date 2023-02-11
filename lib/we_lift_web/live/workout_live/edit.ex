@@ -53,7 +53,6 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
           action={@live_action}
           exercise={@exercise}
           current_user={@current_user}
-          return_to={~p"/workouts/#{@workout.id}/edit"}
         />
       </.modal>
     <% end %>
@@ -170,8 +169,6 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
       |> Workouts.change_exercise(exercise_params)
       |> Map.put(:action, :validate)
 
-    # TODO: check to make sure we don't already have an exercise with the same name.
-
     {:noreply, assign(socket, :changeset, changeset)}
   end
 
@@ -181,11 +178,13 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
   end
 
   defp save_exercise(socket, exercise_params) do
+    # TODO: check to make sure we don't already have an exercise with the same name.
+
     case Workouts.create_exercise(socket.assigns.current_user, exercise_params) do
       {:ok, _exercise} ->
         {:noreply,
          socket
-         |> push_redirect(to: socket.assigns.return_to)}
+         |> push_patch(to: ~p"/workouts/#{socket.assigns.workout.id}/edit")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
