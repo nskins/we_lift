@@ -10,6 +10,7 @@ defmodule WeLiftWeb.ExerciseLive.NewExerciseComponent do
       <h2><%= @title %></h2>
       <.simple_form :let={f} for={:exercise} phx-change="validate" phx-submit="save">
         <.input field={{f, :name}} />
+        <.input field={{f, :user_id}} type="hidden" value={@current_user.id} />
         <:actions>
           <.button>Save</.button>
         </:actions>
