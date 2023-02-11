@@ -181,9 +181,7 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
   end
 
   defp save_exercise(socket, exercise_params) do
-    user_id = socket.assigns.current_user.id
-
-    case Workouts.create_exercise(user_id, exercise_params) do
+    case Workouts.create_exercise(socket.assigns.current_user, exercise_params) do
       {:ok, _exercise} ->
         {:noreply,
          socket
