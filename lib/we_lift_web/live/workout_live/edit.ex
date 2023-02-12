@@ -189,9 +189,9 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
   end
 
   defp load_exercises() do
-     Workouts.list_exercises()
-      |> Sort.alphabetically(& &1.name)
-      |> Enum.map(fn e -> {e.name, e.id} end)
+    Workouts.list_exercises()
+    |> Sort.alphabetically(& &1.name)
+    |> Enum.map(fn e -> {e.name, e.id} end)
   end
 
   defp save_exercise(socket, exercise_params) do
@@ -201,6 +201,7 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
       {:ok, exercise} ->
         exercises = load_exercises()
         selected_exercise_id = exercise.id
+
         {:noreply,
          socket
          |> assign(:exercises, exercises)

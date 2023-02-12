@@ -8,8 +8,12 @@ defmodule WeLiftWeb.ExerciseLive.NewExerciseComponent do
     ~H"""
     <div>
       <h2>Add Custom Exercise</h2>
-      <.simple_form :let={f} for={@exercise_changeset} phx-change="change_exercise" phx-submit="submit_exercise">
-
+      <.simple_form
+        :let={f}
+        for={@exercise_changeset}
+        phx-change="change_exercise"
+        phx-submit="submit_exercise"
+      >
         <.input field={{f, :name}} />
         <.input field={{f, :user_id}} type="hidden" value={@current_user.id} />
         <:actions>
