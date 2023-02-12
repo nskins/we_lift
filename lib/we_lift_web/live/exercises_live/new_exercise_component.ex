@@ -8,7 +8,8 @@ defmodule WeLiftWeb.ExerciseLive.NewExerciseComponent do
     ~H"""
     <div>
       <h2>Add Custom Exercise</h2>
-      <.simple_form :let={f} for={:exercise} phx-change="validate" phx-submit="save">
+      <.simple_form :let={f} for={@exercise_changeset} phx-change="change_exercise" phx-submit="submit_exercise">
+
         <.input field={{f, :name}} />
         <.input field={{f, :user_id}} type="hidden" value={@current_user.id} />
         <:actions>
@@ -21,11 +22,11 @@ defmodule WeLiftWeb.ExerciseLive.NewExerciseComponent do
 
   @impl true
   def update(%{exercise: exercise} = assigns, socket) do
-    changeset = Workouts.change_exercise(exercise)
+    exercise_changeset = Workouts.change_exercise(exercise)
 
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(:changeset, changeset)}
+     |> assign(:exercise_changeset, exercise_changeset)}
   end
 end

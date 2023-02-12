@@ -13,12 +13,12 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
 
     <.simple_form
       :let={f}
-      for={@changeset}
+      for={@set_changeset}
       id="submit_set_form"
       phx-submit="submit_set"
-      phx-change="validate"
+      phx-change="change_set"
     >
-      <.error :if={@changeset.action == :insert}>
+      <.error :if={@set_changeset.action == :insert}>
         Oops, something went wrong! Please check the errors below.
       </.error>
 
@@ -83,10 +83,7 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
         params["id"]
       )
 
-    exercises =
-      Workouts.list_exercises()
-      |> Sort.alphabetically(& &1.name)
-      |> Enum.map(fn e -> {e.name, e.id} end)
+    exercises = load_exercises()
 
     {_, selected_exercise_id} = Enum.at(exercises, 0)
 
@@ -96,7 +93,7 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
      socket
      |> assign(:set, set)
      |> assign(:workout, workout)
-     |> assign(:changeset, Workouts.change_set(set))
+     |> assign(:set_changeset, Workouts.change_set(set))
      |> assign(:exercises, exercises)
      |> assign(:selected_exercise_id, selected_exercise_id)}
   end
@@ -117,17 +114,21 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
   end
 
   @impl true
-  def handle_event("validate", %{"set" => set_params}, socket) do
+  def handle_event("change_set", params, socket) do
+    set_params = params["set"]
+
+    IO.inspect(params)
+
     new_exercise_id = String.to_integer(set_params["exercise_id"])
 
-    changeset =
+    set_changeset =
       socket.assigns.set
       |> Workouts.change_set(set_params)
       |> Map.put(:action, :validate)
 
     {:noreply,
      socket
-     |> assign(:changeset, changeset)
+     |> assign(:set_changeset, set_changeset)
      |> assign(:selected_exercise_id, new_exercise_id)}
   end
 
@@ -147,7 +148,7 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
          |> put_flash(:info, "Workout finished!")
          |> redirect(to: ~p"/workouts")}
 
-      {:error, %Ecto.Changeset{} = _changeset} ->
+      {:error, %Ecto.Changeset{} = _set_changeset} ->
         {:noreply, socket |> put_flash(:error, "Unable to update Workout!")}
     end
   end
@@ -167,37 +168,47 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
 
         {:noreply, assign(socket, :workout, workout)}
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, :changeset, changeset)}
+      {:error, %Ecto.Changeset{} = set_changeset} ->
+        {:noreply, assign(socket, :set_changeset, set_changeset)}
     end
   end
 
   @impl true
-  def handle_event("validate", %{"exercise" => exercise_params}, socket) do
-    changeset =
+  def handle_event("change_exercise", %{"exercise" => exercise_params}, socket) do
+    exercise_changeset =
       socket.assigns.exercise
       |> Workouts.change_exercise(exercise_params)
       |> Map.put(:action, :validate)
 
-    {:noreply, assign(socket, :changeset, changeset)}
+    {:noreply, assign(socket, :exercise_changeset, exercise_changeset)}
   end
 
   @impl true
-  def handle_event("save", %{"exercise" => exercise_params}, socket) do
+  def handle_event("submit_exercise", %{"exercise" => exercise_params}, socket) do
     save_exercise(socket, exercise_params)
+  end
+
+  defp load_exercises() do
+     Workouts.list_exercises()
+      |> Sort.alphabetically(& &1.name)
+      |> Enum.map(fn e -> {e.name, e.id} end)
   end
 
   defp save_exercise(socket, exercise_params) do
     # TODO: check to make sure we don't already have an exercise with the same name.
 
     case Workouts.create_exercise(socket.assigns.current_user, exercise_params) do
-      {:ok, _exercise} ->
+      {:ok, exercise} ->
+        exercises = load_exercises()
+        selected_exercise_id = exercise.id
         {:noreply,
          socket
+         |> assign(:exercises, exercises)
+         |> assign(:selected_exercise_id, selected_exercise_id)
          |> push_patch(to: ~p"/workouts/#{socket.assigns.workout.id}/edit")}
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
+      {:error, %Ecto.Changeset{} = exercise_changeset} ->
+        {:noreply, assign(socket, exercise_changeset: exercise_changeset)}
     end
   end
 end
