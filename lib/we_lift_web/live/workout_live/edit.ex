@@ -29,7 +29,12 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
       </div>
 
       <.input field={{f, :workout_id}} type="hidden" value={@workout.id} />
-      <.input field={{f, :exercise_id}} type="select" options={@exercises} />
+      <.input
+        field={{f, :exercise_id}}
+        type="select"
+        options={@exercises}
+        value={@selected_exercise_id}
+      />
 
       <%= live_patch("+ Add Custom Exercise",
         to: ~p"/workouts/#{@workout.id}/edit/exercises",
@@ -83,6 +88,8 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
       |> Sort.alphabetically(& &1.name)
       |> Enum.map(fn e -> {e.name, e.id} end)
 
+    {_, selected_exercise_id} = Enum.at(exercises, 0)
+
     set = %Set{}
 
     {:ok,
@@ -90,7 +97,8 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
      |> assign(:set, set)
      |> assign(:workout, workout)
      |> assign(:changeset, Workouts.change_set(set))
-     |> assign(:exercises, exercises)}
+     |> assign(:exercises, exercises)
+     |> assign(:selected_exercise_id, selected_exercise_id)}
   end
 
   @impl true
@@ -110,12 +118,17 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
 
   @impl true
   def handle_event("validate", %{"set" => set_params}, socket) do
+    new_exercise_id = String.to_integer(set_params["exercise_id"])
+
     changeset =
       socket.assigns.set
       |> Workouts.change_set(set_params)
       |> Map.put(:action, :validate)
 
-    {:noreply, assign(socket, :changeset, changeset)}
+    {:noreply,
+     socket
+     |> assign(:changeset, changeset)
+     |> assign(:selected_exercise_id, new_exercise_id)}
   end
 
   @impl true
