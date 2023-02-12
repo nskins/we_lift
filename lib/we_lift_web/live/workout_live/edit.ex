@@ -117,8 +117,6 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
   def handle_event("change_set", params, socket) do
     set_params = params["set"]
 
-    IO.inspect(params)
-
     new_exercise_id = String.to_integer(set_params["exercise_id"])
 
     set_changeset =
