@@ -91,8 +91,14 @@ defmodule WeLift.Workouts do
       [%Exercise{}, ...]
 
   """
-  def list_exercises() do
-    Repo.all(Exercise)
+  def list_exercises(user) do
+    user_id = user.id 
+
+    query =
+      from e in Exercise,
+        where: e.user_id == ^user_id or is_nil(e.user_id)
+
+    Repo.all(query)
   end
 
   @doc """

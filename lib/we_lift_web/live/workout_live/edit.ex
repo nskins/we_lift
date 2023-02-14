@@ -83,7 +83,7 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
         params["id"]
       )
 
-    exercises = load_exercises()
+    exercises = load_exercises(socket.assigns.current_user)
 
     {_, selected_exercise_id} = Enum.at(exercises, 0)
 
@@ -186,8 +186,8 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
     save_exercise(socket, exercise_params)
   end
 
-  defp load_exercises() do
-    Workouts.list_exercises()
+  defp load_exercises(user) do
+    Workouts.list_exercises(user)
     |> Sort.alphabetically(& &1.name)
     |> Enum.map(fn e -> {e.name, e.id} end)
   end
@@ -197,7 +197,7 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
 
     case Workouts.create_exercise(socket.assigns.current_user, exercise_params) do
       {:ok, exercise} ->
-        exercises = load_exercises()
+        exercises = load_exercises(socket.assigns.current_user)
         selected_exercise_id = exercise.id
 
         {:noreply,
