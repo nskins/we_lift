@@ -17,5 +17,6 @@ defmodule WeLift.Workouts.Exercise do
     exercise
     |> cast(attrs, [:name, :user_id])
     |> validate_required([:name])
+    |> unique_constraint(:name)
   end
 end
