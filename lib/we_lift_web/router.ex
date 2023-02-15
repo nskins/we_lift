@@ -72,7 +72,6 @@ defmodule WeLiftWeb.Router do
       live "/workouts", WorkoutLive.Index, :home
       live "/workouts/:id", WorkoutLive.Show, :show
       live "/workouts/:id/edit", WorkoutLive.Edit, :edit
-      live "/workouts/:id/edit/exercises", WorkoutLive.Edit, :new
       live "/exercises/history", ExerciseLive.History, :history
     end
   end

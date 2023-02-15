@@ -37,10 +37,9 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
         value={@selected_exercise_id}
       />
 
-      <%= live_patch("+ Add Custom Exercise",
-        to: ~p"/workouts/#{@workout.id}/edit/exercises",
-        class: "text-blue-700 underline p-2"
-      ) %>
+      <.link class="text-blue-700 underline" phx-click="show_modal">
+        + Add Custom Exercise
+      </.link>
 
       <.input field={{f, :weight_in_lbs}} label="Weight (lbs.)" autocomplete="off" />
       <.input field={{f, :reps}} label="Reps" autocomplete="off" />
@@ -50,8 +49,8 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
       </:actions>
     </.simple_form>
 
-    <%= if @live_action in [:new] do %>
-      <.modal id="new-exercise-modal" show={true}>
+    <%= if @show_modal do %>
+      <.modal id="new-exercise-modal" show={true} on_cancel={JS.push("hide_modal")}>
         <.live_component
           module={WeLiftWeb.ExerciseLive.NewExerciseComponent}
           id={:new}
@@ -92,26 +91,13 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
 
     {:ok,
      socket
+     |> assign(:show_modal, false)
      |> assign(:set, set)
      |> assign(:workout, workout)
      |> assign(:set_changeset, Workouts.change_set(set))
+     |> assign(:exercise, nil)
      |> assign(:exercises, exercises)
      |> assign(:selected_exercise_id, selected_exercise_id)}
-  end
-
-  @impl true
-  def handle_params(_params, _url, socket) do
-    {:noreply, apply_action(socket, socket.assigns.live_action)}
-  end
-
-  defp apply_action(socket, :new) do
-    socket
-    |> assign(:exercise, %Exercise{})
-  end
-
-  defp apply_action(socket, :edit) do
-    socket
-    |> assign(:exercise, nil)
   end
 
   @impl true
@@ -173,6 +159,22 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
   end
 
   @impl true
+  def handle_event("show_modal", _params, socket) do
+    {:noreply, 
+      socket
+      |> assign(:exercise, %Exercise{})
+      |> assign(:show_modal, true)}
+  end
+
+  @impl true
+  def handle_event("hide_modal", _params, socket) do
+    {:noreply,
+      socket
+      |> assign(:exercise, nil)
+      |> assign(:show_modal, false)}
+  end
+
+  @impl true
   def handle_event("change_exercise", %{"exercise" => exercise_params}, socket) do
     exercise_changeset =
       socket.assigns.exercise
@@ -205,7 +207,7 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
          socket
          |> assign(:exercises, exercises)
          |> assign(:selected_exercise_id, selected_exercise_id)
-         |> push_patch(to: ~p"/workouts/#{socket.assigns.workout.id}/edit")}
+         |> assign(:show_modal, false)}
 
       {:error, %Ecto.Changeset{} = exercise_changeset} ->
         {:noreply, assign(socket, exercise_changeset: exercise_changeset)}
