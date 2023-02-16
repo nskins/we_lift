@@ -30,7 +30,7 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
 
       <.input field={{f, :workout_id}} type="hidden" value={@workout.id} />
       <.input
-        id={"submit_set_form_exercise_id_#{length(@exercises)}"}
+        id={"submit_set_form_exercise_id_#{@selected_exercise_id}"}
         field={{f, :exercise_id}}
         type="select"
         options={@exercises}
