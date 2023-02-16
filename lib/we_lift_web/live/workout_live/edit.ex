@@ -162,20 +162,20 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
 
     exercise_changeset = Workouts.change_exercise(exercise)
 
-    {:noreply, 
-      socket
-      |> assign(:exercise, exercise)
-      |> assign(:exercise_changeset, exercise_changeset)
-      |> assign(:show_modal, true)}
+    {:noreply,
+     socket
+     |> assign(:exercise, exercise)
+     |> assign(:exercise_changeset, exercise_changeset)
+     |> assign(:show_modal, true)}
   end
 
   @impl true
   def handle_event("hide_modal", _params, socket) do
     {:noreply,
-      socket
-      |> assign(:exercise, nil)
-      |> assign(:exercise_changeset, nil)
-      |> assign(:show_modal, false)}
+     socket
+     |> assign(:exercise, nil)
+     |> assign(:exercise_changeset, nil)
+     |> assign(:show_modal, false)}
   end
 
   @impl true

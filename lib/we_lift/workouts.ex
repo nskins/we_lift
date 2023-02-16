@@ -92,7 +92,7 @@ defmodule WeLift.Workouts do
 
   """
   def list_exercises(user) do
-    user_id = user.id 
+    user_id = user.id
 
     query =
       from e in Exercise,

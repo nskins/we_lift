@@ -14,9 +14,9 @@ defmodule WeLiftWeb.ExerciseLive.NewExerciseComponent do
         phx-change="change_exercise"
         phx-submit="submit_exercise"
       >
-      <.error :if={@exercise_changeset.action == :insert}>
-        Oops, something went wrong! Please check the errors below.
-      </.error>
+        <.error :if={@exercise_changeset.action == :insert}>
+          Oops, something went wrong! Please check the errors below.
+        </.error>
 
         <.input field={{f, :name}} />
         <.input field={{f, :user_id}} type="hidden" value={@current_user.id} />
