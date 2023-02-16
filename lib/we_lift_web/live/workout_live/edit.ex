@@ -55,7 +55,7 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
           module={WeLiftWeb.ExerciseLive.NewExerciseComponent}
           id={:new}
           action={@live_action}
-          exercise={@exercise}
+          exercise_changeset={@exercise_changeset}
           current_user={@current_user}
         />
       </.modal>
@@ -158,9 +158,14 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
 
   @impl true
   def handle_event("show_modal", _params, socket) do
+    exercise = %Exercise{}
+
+    exercise_changeset = Workouts.change_exercise(exercise)
+
     {:noreply, 
       socket
-      |> assign(:exercise, %Exercise{})
+      |> assign(:exercise, exercise)
+      |> assign(:exercise_changeset, exercise_changeset)
       |> assign(:show_modal, true)}
   end
 
@@ -169,6 +174,7 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
     {:noreply,
       socket
       |> assign(:exercise, nil)
+      |> assign(:exercise_changeset, nil)
       |> assign(:show_modal, false)}
   end
 
@@ -199,12 +205,11 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
     case Workouts.create_exercise(socket.assigns.current_user, exercise_params) do
       {:ok, exercise} ->
         exercises = load_exercises(socket.assigns.current_user)
-        selected_exercise_id = exercise.id
 
         {:noreply,
          socket
          |> assign(:exercises, exercises)
-         |> assign(:selected_exercise_id, selected_exercise_id)
+         |> assign(:selected_exercise_id, exercise.id)
          |> assign(:show_modal, false)}
 
       {:error, %Ecto.Changeset{} = exercise_changeset} ->

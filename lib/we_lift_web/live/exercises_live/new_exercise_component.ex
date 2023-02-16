@@ -14,6 +14,10 @@ defmodule WeLiftWeb.ExerciseLive.NewExerciseComponent do
         phx-change="change_exercise"
         phx-submit="submit_exercise"
       >
+      <.error :if={@exercise_changeset.action == :insert}>
+        Oops, something went wrong! Please check the errors below.
+      </.error>
+
         <.input field={{f, :name}} />
         <.input field={{f, :user_id}} type="hidden" value={@current_user.id} />
         <:actions>
@@ -25,12 +29,9 @@ defmodule WeLiftWeb.ExerciseLive.NewExerciseComponent do
   end
 
   @impl true
-  def update(%{exercise: exercise} = assigns, socket) do
-    exercise_changeset = Workouts.change_exercise(exercise)
-
+  def update(assigns, socket) do
     {:ok,
      socket
-     |> assign(assigns)
-     |> assign(:exercise_changeset, exercise_changeset)}
+     |> assign(assigns)}
   end
 end
