@@ -54,7 +54,6 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
         <.live_component
           module={WeLiftWeb.ExerciseLive.NewExerciseComponent}
           id={:new}
-          action={@live_action}
           exercise_changeset={@exercise_changeset}
           current_user={@current_user}
         />
