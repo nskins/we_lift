@@ -131,9 +131,13 @@ defmodule WeLift.Workouts do
   def get_exercise_by_name(user, name) do
     user_id = user.id
 
+    downcased_name = String.downcase(name)
+
     query =
       from e in Exercise,
-        where: e.name == ^name and (e.user_id == ^user_id or is_nil(e.user_id))
+        where:
+          fragment("lower(?)", e.name) == ^downcased_name and
+            (e.user_id == ^user_id or is_nil(e.user_id))
 
     Repo.one(query)
   end
