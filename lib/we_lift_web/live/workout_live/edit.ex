@@ -198,21 +198,32 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
     |> Enum.map(fn e -> {e.name, e.id} end)
   end
 
-  defp save_exercise(socket, exercise_params) do
-    # TODO: check to make sure we don't already have an exercise with the same name.
+  defp save_exercise(socket, %{"name" => name} = exercise_params) do
+    user = socket.assigns.current_user
 
-    case Workouts.create_exercise(socket.assigns.current_user, exercise_params) do
-      {:ok, exercise} ->
-        exercises = load_exercises(socket.assigns.current_user)
+    existing_exercise = Workouts.get_exercise_by_name(user, name)
 
+    case existing_exercise do
+      nil ->
+        case Workouts.create_exercise(user, exercise_params) do
+          {:ok, exercise} ->
+            exercises = load_exercises(user)
+
+            {:noreply,
+             socket
+             |> assign(:exercises, exercises)
+             |> assign(:selected_exercise_id, exercise.id)
+             |> assign(:show_modal, false)}
+
+          {:error, %Ecto.Changeset{} = exercise_changeset} ->
+            {:noreply, assign(socket, exercise_changeset: exercise_changeset)}
+        end
+
+      _ ->
         {:noreply,
          socket
-         |> assign(:exercises, exercises)
-         |> assign(:selected_exercise_id, exercise.id)
+         |> assign(:selected_exercise_id, existing_exercise.id)
          |> assign(:show_modal, false)}
-
-      {:error, %Ecto.Changeset{} = exercise_changeset} ->
-        {:noreply, assign(socket, exercise_changeset: exercise_changeset)}
     end
   end
 end

@@ -128,6 +128,16 @@ defmodule WeLift.Workouts do
     Repo.all(query)
   end
 
+  def get_exercise_by_name(user, name) do
+    user_id = user.id
+
+    query =
+      from e in Exercise,
+        where: e.name == ^name and (e.user_id == ^user_id or is_nil(e.user_id))
+
+    Repo.one(query)
+  end
+
   def get_historical_sets_by_exercise(user_id, exercise_id, months_back) do
     query =
       from s in Set,
