@@ -1,8 +1,6 @@
 defmodule WeLiftWeb.ExerciseLive.NewExerciseComponent do
   use WeLiftWeb, :live_component
 
-  alias WeLift.Workouts
-
   @impl true
   def render(assigns) do
     ~H"""
