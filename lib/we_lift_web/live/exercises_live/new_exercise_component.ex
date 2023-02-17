@@ -10,6 +10,7 @@ defmodule WeLiftWeb.ExerciseLive.NewExerciseComponent do
       <h2>Add Custom Exercise</h2>
       <.simple_form
         :let={f}
+        id="submit_exercise_form"
         for={@exercise_changeset}
         phx-change="change_exercise"
         phx-submit="submit_exercise"

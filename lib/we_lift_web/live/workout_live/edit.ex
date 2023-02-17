@@ -37,7 +37,7 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
         value={@selected_exercise_id}
       />
 
-      <.link class="text-blue-700 underline" phx-click="show_modal">
+      <.link id="add_custom_exercise_link" class="text-blue-700 underline" phx-click="show_modal">
         + Add Custom Exercise
       </.link>
 
