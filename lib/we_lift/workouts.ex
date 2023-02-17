@@ -11,6 +11,30 @@ defmodule WeLift.Workouts do
   alias WeLift.Workouts.Workout
 
   @doc """
+  Creates a user-specific exercise.
+
+  ## Examples
+
+    iex> create_exercise(%{id: 5}, %{name: "Power Clean"})
+    {:ok, %Exercise{}}
+
+    iex> create_exercise(%{id: 5}, %{name: ""})
+    {:error, %Ecto.Changeset{}}
+
+  """
+  def create_exercise(user, attrs \\ %{}) do
+    user_id = Integer.to_string(user.id)
+
+    # This verifies that the User has permission to 
+    # create an Exercise with these parameters.
+    %{"user_id" => ^user_id} = attrs
+
+    %Exercise{}
+    |> Exercise.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
   Creates a set.
 
   Raises `MatchError` if the User is not authorized
@@ -67,8 +91,14 @@ defmodule WeLift.Workouts do
       [%Exercise{}, ...]
 
   """
-  def list_exercises() do
-    Repo.all(Exercise)
+  def list_exercises(user) do
+    user_id = user.id
+
+    query =
+      from e in Exercise,
+        where: e.user_id == ^user_id or is_nil(e.user_id)
+
+    Repo.all(query)
   end
 
   @doc """
@@ -88,6 +118,28 @@ defmodule WeLift.Workouts do
         where: w.user_id == ^user_id
 
     Repo.all(query)
+  end
+
+  def get_custom_exercises(user_id) do
+    query =
+      from e in Exercise,
+        where: e.user_id == ^user_id
+
+    Repo.all(query)
+  end
+
+  def get_exercise_by_name(user, name) do
+    user_id = user.id
+
+    downcased_name = String.downcase(name)
+
+    query =
+      from e in Exercise,
+        where:
+          fragment("lower(?)", e.name) == ^downcased_name and
+            (e.user_id == ^user_id or is_nil(e.user_id))
+
+    Repo.one(query)
   end
 
   def get_historical_sets_by_exercise(user_id, exercise_id, months_back) do
@@ -221,6 +273,18 @@ defmodule WeLift.Workouts do
     %Workout{user_id: ^user_id} = workout
 
     Repo.delete_all(from s in Set, where: s.id == ^set_id)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking exercise changes.
+
+  ## Examples
+      iex> change_exercise(exercise)
+      %Ecto.Changeset{data: %Exercise{}}
+
+  """
+  def change_exercise(%Exercise{} = exercise, attrs \\ %{}) do
+    Exercise.changeset(exercise, attrs)
   end
 
   @doc """

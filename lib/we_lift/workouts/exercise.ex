@@ -5,6 +5,8 @@ defmodule WeLift.Workouts.Exercise do
   schema "exercises" do
     field :name, :string
 
+    belongs_to :user, WeLift.Accounts.User
+
     has_many :sets, WeLift.Workouts.Set
 
     timestamps()
@@ -13,7 +15,8 @@ defmodule WeLift.Workouts.Exercise do
   @doc false
   def changeset(exercise, attrs) do
     exercise
-    |> cast(attrs, [:name])
+    |> cast(attrs, [:name, :user_id])
     |> validate_required([:name])
+    |> unique_constraint([:name, :user_id])
   end
 end

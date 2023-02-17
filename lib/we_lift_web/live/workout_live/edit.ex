@@ -3,6 +3,7 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
 
   alias WeLift.Sort
   alias WeLift.Workouts
+  alias WeLift.Workouts.Exercise
   alias WeLift.Workouts.Set
 
   @impl true
@@ -12,12 +13,12 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
 
     <.simple_form
       :let={f}
-      for={@changeset}
+      for={@set_changeset}
       id="submit_set_form"
       phx-submit="submit_set"
-      phx-change="validate"
+      phx-change="change_set"
     >
-      <.error :if={@changeset.action == :insert}>
+      <.error :if={@set_changeset.action == :insert}>
         Oops, something went wrong! Please check the errors below.
       </.error>
 
@@ -28,7 +29,18 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
       </div>
 
       <.input field={{f, :workout_id}} type="hidden" value={@workout.id} />
-      <.input field={{f, :exercise_id}} type="select" options={@exercises} />
+      <.input
+        id={"submit_set_form_exercise_id_#{@selected_exercise_id}"}
+        field={{f, :exercise_id}}
+        type="select"
+        options={@exercises}
+        value={@selected_exercise_id}
+      />
+
+      <.link id="add_custom_exercise_link" class="text-blue-700 underline" phx-click="show_modal">
+        + Add Custom Exercise
+      </.link>
+
       <.input field={{f, :weight_in_lbs}} label="Weight (lbs.)" autocomplete="off" />
       <.input field={{f, :reps}} label="Reps" autocomplete="off" />
 
@@ -36,6 +48,17 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
         <.button phx-disable-with="Adding...">Finish Set</.button>
       </:actions>
     </.simple_form>
+
+    <%= if @show_modal do %>
+      <.modal id="new-exercise-modal" show={true} on_cancel={JS.push("hide_modal")}>
+        <.live_component
+          module={WeLiftWeb.ExerciseLive.NewExerciseComponent}
+          id={:new}
+          exercise_changeset={@exercise_changeset}
+          current_user={@current_user}
+        />
+      </.modal>
+    <% end %>
 
     <.button class="mt-7" phx-click="finish_workout">Finish Workout</.button>
     """
@@ -59,29 +82,36 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
         params["id"]
       )
 
-    exercises =
-      Workouts.list_exercises()
-      |> Sort.alphabetically(& &1.name)
-      |> Enum.map(fn e -> {e.name, e.id} end)
+    exercises = load_exercises(socket.assigns.current_user)
+
+    {_, selected_exercise_id} = Enum.at(exercises, 0)
 
     set = %Set{}
 
     {:ok,
      socket
+     |> assign(:show_modal, false)
      |> assign(:set, set)
      |> assign(:workout, workout)
-     |> assign(:changeset, Workouts.change_set(set))
-     |> assign(:exercises, exercises)}
+     |> assign(:set_changeset, Workouts.change_set(set))
+     |> assign(:exercise, nil)
+     |> assign(:exercises, exercises)
+     |> assign(:selected_exercise_id, selected_exercise_id)}
   end
 
   @impl true
-  def handle_event("validate", %{"set" => set_params}, socket) do
-    changeset =
+  def handle_event("change_set", %{"set" => set_params}, socket) do
+    new_exercise_id = String.to_integer(set_params["exercise_id"])
+
+    set_changeset =
       socket.assigns.set
       |> Workouts.change_set(set_params)
       |> Map.put(:action, :validate)
 
-    {:noreply, assign(socket, :changeset, changeset)}
+    {:noreply,
+     socket
+     |> assign(:set_changeset, set_changeset)
+     |> assign(:selected_exercise_id, new_exercise_id)}
   end
 
   @impl true
@@ -100,7 +130,7 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
          |> put_flash(:info, "Workout finished!")
          |> redirect(to: ~p"/workouts")}
 
-      {:error, %Ecto.Changeset{} = _changeset} ->
+      {:error, %Ecto.Changeset{} = _set_changeset} ->
         {:noreply, socket |> put_flash(:error, "Unable to update Workout!")}
     end
   end
@@ -120,8 +150,80 @@ defmodule WeLiftWeb.WorkoutLive.Edit do
 
         {:noreply, assign(socket, :workout, workout)}
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, :changeset, changeset)}
+      {:error, %Ecto.Changeset{} = set_changeset} ->
+        {:noreply, assign(socket, :set_changeset, set_changeset)}
+    end
+  end
+
+  @impl true
+  def handle_event("show_modal", _params, socket) do
+    exercise = %Exercise{}
+
+    exercise_changeset = Workouts.change_exercise(exercise)
+
+    {:noreply,
+     socket
+     |> assign(:exercise, exercise)
+     |> assign(:exercise_changeset, exercise_changeset)
+     |> assign(:show_modal, true)}
+  end
+
+  @impl true
+  def handle_event("hide_modal", _params, socket) do
+    {:noreply,
+     socket
+     |> assign(:exercise, nil)
+     |> assign(:exercise_changeset, nil)
+     |> assign(:show_modal, false)}
+  end
+
+  @impl true
+  def handle_event("change_exercise", %{"exercise" => exercise_params}, socket) do
+    exercise_changeset =
+      socket.assigns.exercise
+      |> Workouts.change_exercise(exercise_params)
+      |> Map.put(:action, :validate)
+
+    {:noreply, assign(socket, :exercise_changeset, exercise_changeset)}
+  end
+
+  @impl true
+  def handle_event("submit_exercise", %{"exercise" => exercise_params}, socket) do
+    save_exercise(socket, exercise_params)
+  end
+
+  defp load_exercises(user) do
+    Workouts.list_exercises(user)
+    |> Sort.alphabetically(& &1.name)
+    |> Enum.map(fn e -> {e.name, e.id} end)
+  end
+
+  defp save_exercise(socket, %{"name" => name} = exercise_params) do
+    user = socket.assigns.current_user
+
+    existing_exercise = Workouts.get_exercise_by_name(user, name)
+
+    case existing_exercise do
+      nil ->
+        case Workouts.create_exercise(user, exercise_params) do
+          {:ok, exercise} ->
+            exercises = load_exercises(user)
+
+            {:noreply,
+             socket
+             |> assign(:exercises, exercises)
+             |> assign(:selected_exercise_id, exercise.id)
+             |> assign(:show_modal, false)}
+
+          {:error, %Ecto.Changeset{} = exercise_changeset} ->
+            {:noreply, assign(socket, exercise_changeset: exercise_changeset)}
+        end
+
+      _ ->
+        {:noreply,
+         socket
+         |> assign(:selected_exercise_id, existing_exercise.id)
+         |> assign(:show_modal, false)}
     end
   end
 end

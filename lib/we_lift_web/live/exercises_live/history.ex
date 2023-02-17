@@ -38,7 +38,7 @@ defmodule WeLiftWeb.ExerciseLive.History do
   @impl true
   def mount(_params, _session, socket) do
     exercises =
-      Workouts.list_exercises()
+      Workouts.list_exercises(socket.assigns.current_user)
       |> Sort.alphabetically(& &1.name)
       |> Enum.map(fn e -> {e.name, e.id} end)
 
