@@ -103,9 +103,8 @@ defmodule WeLiftWeb.ExerciseLive.History do
 
       _ ->
         sets
-        |> Enum.map(fn {a, b} -> [a, b] end)
         |> Contex.Dataset.new()
-        |> Contex.Plot.new(Contex.LinePlot, 600, 400, smoothed: false)
+        |> Contex.Plot.new(Contex.PointPlot, 600, 400, mapping: %{x_col: :date, y_cols: [:min, :max]}, smoothed: false)
         |> Contex.Plot.to_svg()
     end
   end
