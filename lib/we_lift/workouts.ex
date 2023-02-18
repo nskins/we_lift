@@ -151,7 +151,7 @@ defmodule WeLift.Workouts do
           w.user_id == ^user_id and s.exercise_id == ^exercise_id and
             s.inserted_at > ago(^months_back, "month"),
         group_by: [fragment("?::date", s.inserted_at)],
-        select: {max(s.inserted_at), min(s.weight_in_lbs), max(s.weight_in_lbs)}
+        select: %{date: max(s.inserted_at), min: min(s.weight_in_lbs), max: max(s.weight_in_lbs)}
 
     Repo.all(query)
   end
