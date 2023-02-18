@@ -103,8 +103,8 @@ defmodule WeLiftWeb.ExerciseLive.History do
 
       _ ->
         sets
-        |> Contex.Dataset.new(["Date", "Min", "Max"])
-        |> Contex.Plot.new(Contex.PointPlot, 600, 400, mapping: %{x_col: "Date", y_cols: ["Min", "Max"]}, legend_setting: :legend_right, smoothed: false)
+        |> Contex.Dataset.new(["Date", "Max", "Min"])
+        |> Contex.Plot.new(Contex.PointPlot, 600, 400, mapping: %{x_col: "Date", y_cols: ["Max", "Min"]}, legend_setting: :legend_right, smoothed: false)
         |> Contex.Plot.to_svg()
     end
   end
