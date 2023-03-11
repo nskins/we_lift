@@ -1,11 +1,43 @@
-<section class="h-screen flex flex-col items-center justify-center">
-  <div class="text-8xl">WeLift</div>
-  <section class="flex flex-row p-3">
-    <.button class="text-3xl py-5 px-6 m-2" phx-click={JS.navigate(~p"/users/log_in")}>
+<section class="container mx-auto p-8 flex flex-row">
+  <a href={~p"/"} class="text-4xl font-bold">WeLift</a>
+  <div class="flex grow justify-end">
+    <.button class="text-xl py-2 px-4 mx-1" phx-click={JS.navigate(~p"/users/register")}>
+      Sign Up
+    </.button>
+    <.button class="text-xl py-2 px-4 mx-1" phx-click={JS.navigate(~p"/users/log_in")}>
       Log in
     </.button>
-    <.button class="text-3xl py-5 px-6 m-2" phx-click={JS.navigate(~p"/users/register")}>
-      Register
-    </.button>
-  </section>
+  </div>
 </section>
+<.feature
+  title="LIFT WITH CONFIDENCE"
+  description="For those who go the extra mile. Track your workouts and maximize your performance."
+  image="/images/hero_history.png"
+  black={true}
+  hero={true}
+/>
+<div class="container mx-auto flex flex-col text-center">
+  <div class="w-full text-4xl px-8 pt-16 pb-4 font-bold">
+    WeLift is the secret sauce for athletes.
+  </div>
+  <div class="w-full text-xl px-8 py-4">Find out why. Check out some of our features.</div>
+</div>
+<.feature
+  title="EASILY TRACK YOUR WORKOUTS"
+  description="A simple and intuitive interface enables you to record weight and reps for each set in your workout. Reference your previous workout so that you never forget what you lifted last time."
+  image="/images/workouts.png"
+  border={true}
+/>
+<.feature
+  title="AN EXERCISE DATABASE WITH FLEXIBILITY"
+  description="There are plenty of exercises available to get you started! Want to try something different? You can add custom exercises and use them for your current and future workouts."
+  image="/images/exercises.png"
+  black={true}
+  reverse={true}
+/>
+<.feature
+  title="FREE AND OPEN SOURCE SOFTWARE"
+  description="The source code is available under a free and open source license. You may even choose to deploy your own instance. Contributions are welcome and encouraged!"
+  image="/images/earth.png"
+  link={true}
+/>
