@@ -13,6 +13,7 @@ defmodule WeLiftWeb.PageHTML do
   attr :reverse, :boolean, default: false
   attr :hero, :boolean, default: false
   attr :link, :boolean, default: false
+
   def feature(assigns) do
     assigns =
       assigns
@@ -43,7 +44,12 @@ defmodule WeLiftWeb.PageHTML do
               <%= @description %>
             </div>
             <%= if @link do %>
-              <a class="lg:text-start text-center text-blue-700 underline text-xl" href="https://github.com/nskins/we_lift">View the source code</a>
+              <a
+                class="lg:text-start text-center text-blue-700 underline text-xl"
+                href="https://github.com/nskins/we_lift"
+              >
+                View the source code
+              </a>
             <% end %>
           </div>
         </div>
