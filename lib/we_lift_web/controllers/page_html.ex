@@ -32,7 +32,10 @@ defmodule WeLiftWeb.PageHTML do
         if(assigns.hero, do: "lg:h-[680px] h-fit", else: "lg:h-[580px] h-fit")
       )
       |> assign(:title_font_size, if(assigns.hero, do: "sm:text-6xl text-4xl", else: "text-4xl"))
-      |> assign(:description_font_size, if(assigns.hero, do: "sm:text-2xl text-xl", else: "text-xl"))
+      |> assign(
+        :description_font_size,
+        if(assigns.hero, do: "sm:text-2xl text-xl", else: "text-xl")
+      )
 
     ~H"""
     <div class={"flex #{@height_style} flex-row p-8 #{@color_style}"}>
