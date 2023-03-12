@@ -1,6 +1,18 @@
 # WeLift ![CI](https://github.com/nskins/we_lift/actions/workflows/ci.yml/badge.svg)
 
-WeLift is a workout tracking app built with Phoenix LiveView.
+Say hello to the groundbreaking new technology that empowers athletes to achieve greatness.
+
+Imagine the following scenario: you're at the gym on a lovely Sunday morning. It's chest day, and you definitely want to start your workout with the bench press. You know the importance of progressive overload, so you're thinking it'd be a good idea to increase the weight from your last workout. The only problem is... you can't remember what you did last week!
+
+Introducing... WeLift! This powerful and innovative system enables you to track your workouts in as much detail as you need. You'll never again have to rely on memory and guess a suitable weight for today's lift. A sleek and fluid user interface helps you to input data quickly so you can focus on what really matters.
+
+Here's a few of our favorite features:
+- Track the weight and reps of each set in your workout.
+- An exercise database with plenty of favorites to get you started.
+- Don't see your favorite exercise? Easily add a custom exercise!
+- Analyze your performance over a long period of time with progress graphs.
+
+Get started today! Check out our [homepage](https://welift.fly.dev) to learn more!
 
 ## How to Build
 
