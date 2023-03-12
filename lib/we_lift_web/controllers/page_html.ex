@@ -29,10 +29,13 @@ defmodule WeLiftWeb.PageHTML do
       |> assign(:text_order_style, if(assigns.reverse, do: "lg:order-2 order-1", else: "order-1"))
       |> assign(
         :height_style,
-        if(assigns.hero, do: "lg:h-[680px] h-[780px]", else: "lg:h-[580px] h-[730px]")
+        if(assigns.hero, do: "lg:h-[680px] h-fit", else: "lg:h-[580px] h-fit")
       )
-      |> assign(:title_font_size, if(assigns.hero, do: "text-6xl", else: "text-4xl"))
-      |> assign(:description_font_size, if(assigns.hero, do: "text-2xl", else: "text-xl"))
+      |> assign(:title_font_size, if(assigns.hero, do: "sm:text-6xl text-4xl", else: "text-4xl"))
+      |> assign(
+        :description_font_size,
+        if(assigns.hero, do: "sm:text-2xl text-xl", else: "text-xl")
+      )
 
     ~H"""
     <div class={"flex #{@height_style} flex-row p-8 #{@color_style}"}>
@@ -53,7 +56,7 @@ defmodule WeLiftWeb.PageHTML do
             <% end %>
           </div>
         </div>
-        <div class={"flex lg:w-1/2 justify-center #{@image_order_style}"}>
+        <div class={"flex lg:w-1/2 lg:p-0 pb-8 justify-center #{@image_order_style}"}>
           <div class="flex flex-col justify-center max-w-xl">
             <img class={"rounded-2xl #{@border_style}"} src={@image} />
           </div>
