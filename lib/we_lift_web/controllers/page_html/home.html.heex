@@ -1,10 +1,10 @@
-<section class="container mx-auto p-8 flex flex-row">
-  <a href={~p"/"} class="text-4xl font-bold">WeLift</a>
+<section class="container mx-auto sm:p-6 p-4 flex flex-row">
+  <a href={~p"/"} class="flex text-4xl font-bold self-end">WeLift</a>
   <div class="flex grow justify-end">
-    <.button class="text-xl py-2 px-4 mx-1" phx-click={JS.navigate(~p"/users/register")}>
+    <.button class="sm:text-xl text-l py-2 px-4 mx-1" phx-click={JS.navigate(~p"/users/register")}>
       Sign Up
     </.button>
-    <.button class="text-xl py-2 px-4 mx-1" phx-click={JS.navigate(~p"/users/log_in")}>
+    <.button class="sm:text-xl text-l py-2 px-4 mx-1" phx-click={JS.navigate(~p"/users/log_in")}>
       Log in
     </.button>
   </div>
