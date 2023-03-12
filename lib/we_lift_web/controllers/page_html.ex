@@ -53,7 +53,7 @@ defmodule WeLiftWeb.PageHTML do
             <% end %>
           </div>
         </div>
-        <div class={"flex lg:w-1/2 justify-center #{@image_order_style}"}>
+        <div class={"flex lg:w-1/2 lg:p-0 pb-8 justify-center #{@image_order_style}"}>
           <div class="flex flex-col justify-center max-w-xl">
             <img class={"rounded-2xl #{@border_style}"} src={@image} />
           </div>
